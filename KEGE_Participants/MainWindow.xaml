@@ -21,7 +21,7 @@
                 d:BorderThickness="3" BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="15"
                 >
-                
+
                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Border>
             <ControlTemplate.Triggers>
@@ -63,15 +63,25 @@
             >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="1357"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <!--|| Главное меню с логотипом ||-->
             <userControl:SideMenuControl
-                Grid.Column="0"
+                x:Name="MainMenu_SideMenu"
+                Grid.Column="0" Visibility="Visible"
                 />
 
             <userControl:MainLogoControl
-                Grid.Column="1"
+                x:Name="MainMenu_Logo"
+                Grid.Column="1" Visibility="Visible"
+                />
+
+            <!--|| Решение задач ||-->
+
+            <userControl:SideWorkedControl
+                x:Name="WorkedArea_SideMenu"
+                Grid.Column="0" Visibility="Collapsed"
                 />
 
         </Grid>

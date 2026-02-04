@@ -1,11 +1,12 @@
-﻿<UserControl x:Class="KEGE_Participants.User_Controls.SideMenuControl"
+﻿<UserControl x:Class="KEGE_Participants.User_Controls.SideWorkedControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="470">
+             d:DesignHeight="1080" d:DesignWidth="470"
+             >
     <UserControl.Resources>
 
         <ControlTemplate x:Key="NoMouseOverButtonTemplate" TargetType="Button">
@@ -54,35 +55,23 @@
                     Source="/Resources/Icons/buttonClose96x96.png" 
                     Height="50" Width="50"
                     />
-                
+
             </Button>
 
-            <local:LoginControl
-                x:Name="_LoginBoard"
+            <local:TaskHandlerControl
+                x:Name="_TaskHandler"
                 Margin="30 120 30 5"
-                Grid.Row="1" Width="400"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Left"
+                Grid.Row="1"
                 />
 
             <Button
-                x:Name="_StartAttempt_btn" Grid.Row="2"
-                Content="Начать попытку" Height="80" Width="400" Margin="30 5"
-                FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
-                BorderBrush="#000" BorderThickness="3" Background="#fff"
-                Template="{StaticResource NoMouseOverButtonTemplate}"
-                Click="_StartAttempt_btn_Click" HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                />
-
-            <!--<Button
-                x:Name="_EndAttempt_btn" Grid.Row="3"
-                Content="Завершить попытку" Height="80" Width="400" Margin="30 10 10 80"
+                x:Name="_EndAttempt_btn" Grid.Row="2"
+                Content="Завершить попытку" Height="80" Width="400" Margin="30 5"
                 FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
                 BorderBrush="#000" BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"
                 Click="_EndAttempt_btn_Click" HorizontalAlignment="Left"
-                />-->
+                />
 
         </Grid>
     </Border>

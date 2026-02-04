@@ -5,10 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
              mc:Ignorable="d" 
+             d:Width="1357"
              >
 
     <Viewbox Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Grid Width="1600" Height="1273.5" ClipToBounds="True">
+        <Grid Width="1600" Height="1273" ClipToBounds="False">
 
             <TextBlock Text="Demid"
                    FontSize="300"
@@ -50,7 +51,7 @@
                HorizontalAlignment="Right" 
                VerticalAlignment="Bottom"
                Width="1200" Height="1200"
-               Margin="0,0,-250,-290"
+               Margin="0,0,-370,-290"
                Opacity="0.9">
                 <Image.LayoutTransform>
                     <ScaleTransform ScaleX="-1" ScaleY="1"/>

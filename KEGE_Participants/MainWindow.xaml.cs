@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using KEGE_Participants.Models.Facade.Pages;
+using KEGE_Participants.Models.Facade;
+using System.Windows;
 
 namespace KEGE_Participants
 {
@@ -7,9 +9,18 @@ namespace KEGE_Participants
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly PageFacade _facade = PageFacade.Instance;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _facade.Initialize(
+                new MainMenu(MainMenu_Logo, MainMenu_SideMenu),
+                new WorkedArea(WorkedArea_SideMenu)
+            );
+
+            _facade.OpenMainMenu();
         }
     }
 }
