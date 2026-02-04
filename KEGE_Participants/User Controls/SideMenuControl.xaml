@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="KEGE_Participants.User_Controls.SideMenuControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="600">
+    <UserControl.Resources>
+
+        <ControlTemplate x:Key="NoMouseOverButtonTemplate" TargetType="Button">
+            <Border 
+                x:Name="InnerBorder" 
+                d:Background="#fff" Background="{TemplateBinding Background}" 
+                d:BorderBrush="#000" BorderBrush="{TemplateBinding BorderBrush}"
+                d:BorderThickness="3" BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="15"
+                >
+
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{x:Static SystemColors.ControlLightBrush}" />
+                    <Setter Property="Foreground" Value="{x:Static SystemColors.GrayTextBrush}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Storyboard x:Key="CollapseMenu">
+            <DoubleAnimation 
+                Storyboard.TargetName="_Border"
+                Storyboard.TargetProperty="Width"
+                To="90" 
+                Duration="0:0:0.4">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="ExpandMenu">
+            <DoubleAnimation Storyboard.TargetName="_Border" Storyboard.TargetProperty="Width"
+                         To="600" Duration="0:0:0.4">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseInOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+    </UserControl.Resources>
+    <Border
+        x:Name="_Border"
+        Background="#2d6dfe"
+        BorderBrush="#000"
+        BorderThickness="0 3 3 3"
+        CornerRadius="0 15 15 0"
+        ClipToBounds="True"
+        >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Button
+                x:Name="_Close_btn"
+                Height="70" Width="70" Margin="10 30"
+                HorizontalAlignment="Left"
+                Template="{StaticResource NoMouseOverButtonTemplate}"
+                Click="_Close_btn_Click"
+                >
+                <Image 
+                    Source="/Resources/Icons/buttonClose96x96.png" 
+                    Height="50" Width="50"
+                    />
+                
+            </Button>
+
+            <local:LoginControl
+                Margin="10 0"
+                Grid.Row="1" Width="500"
+                VerticalAlignment="Center"
+                />
+
+            <Button
+                x:Name="_StartAttempt_btn" Grid.Row="2"
+                Content="Начать попытку" Height="80" Width="500" Margin="10 30"
+                FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
+                Template="{StaticResource NoMouseOverButtonTemplate}"
+                Click="_StartAttempt_btn_Click"
+                />
+
+            <Button
+                x:Name="_EndAttempt_btn" Grid.Row="3"
+                Content="Завершить попытку" Height="80" Width="500" Margin="10 30"
+                FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
+                Template="{StaticResource NoMouseOverButtonTemplate}"
+                Click="_EndAttempt_btn_Click"
+                />
+
+        </Grid>
+    </Border>
+</UserControl>
