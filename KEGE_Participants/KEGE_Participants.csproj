@@ -10,10 +10,14 @@
 
   <ItemGroup>
     <None Remove="Resources\Icons\buttonClose96x96.png" />
+    <None Remove="Resources\Icons\edusite_blue_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\Icons\buttonClose96x96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\edusite_blue_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

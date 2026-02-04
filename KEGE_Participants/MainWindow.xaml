@@ -4,9 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KEGE_Participants"
+        xmlns:userControl="clr-namespace:KEGE_Participants.User_Controls"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
         WindowStyle="None"
-        Background="Transparent"
         AllowsTransparency="True"
         Title="MainWindow" Height="1080" Width="1920">
     <Window.Resources>
@@ -54,9 +56,24 @@
             </Setter>
         </Style>
 
-
     </Window.Resources>
-    <Grid>
+    <Viewbox Stretch="Uniform">
+        <Grid 
+            Width="1920" Height="1080"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="1357"/>
+            </Grid.ColumnDefinitions>
 
-    </Grid>
+            <userControl:SideMenuControl
+                Grid.Column="0"
+                />
+
+            <userControl:MainLogoControl
+                Grid.Column="1"
+                />
+
+        </Grid>
+    </Viewbox>
 </Window>

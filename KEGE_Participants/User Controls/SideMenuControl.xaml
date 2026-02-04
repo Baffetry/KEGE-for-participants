@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="600">
+             d:DesignHeight="1080" d:DesignWidth="570">
     <UserControl.Resources>
 
         <ControlTemplate x:Key="NoMouseOverButtonTemplate" TargetType="Button">
@@ -27,34 +27,12 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
-        <Storyboard x:Key="CollapseMenu">
-            <DoubleAnimation 
-                Storyboard.TargetName="_Border"
-                Storyboard.TargetProperty="Width"
-                To="90" 
-                Duration="0:0:0.4">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseInOut"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-
-        <Storyboard x:Key="ExpandMenu">
-            <DoubleAnimation Storyboard.TargetName="_Border" Storyboard.TargetProperty="Width"
-                         To="600" Duration="0:0:0.4">
-                <DoubleAnimation.EasingFunction>
-                    <CubicEase EasingMode="EaseInOut"/>
-                </DoubleAnimation.EasingFunction>
-            </DoubleAnimation>
-        </Storyboard>
-
     </UserControl.Resources>
     <Border
         x:Name="_Border"
         Background="#2d6dfe"
         BorderBrush="#000"
-        BorderThickness="0 3 3 3"
-        CornerRadius="0 15 15 0"
+        BorderThickness="0 0 3 0"
         ClipToBounds="True"
         >
         <Grid>
@@ -67,8 +45,9 @@
 
             <Button
                 x:Name="_Close_btn"
-                Height="70" Width="70" Margin="10 30"
-                HorizontalAlignment="Left"
+                Height="70" Width="70" Margin="30"
+                HorizontalAlignment="Left" BorderBrush="#000"
+                BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"
                 Click="_Close_btn_Click"
                 >
@@ -80,25 +59,29 @@
             </Button>
 
             <local:LoginControl
-                Margin="10 0"
+                x:Name="_LoginBoard"
+                Margin="30 0"
                 Grid.Row="1" Width="500"
                 VerticalAlignment="Center"
+                HorizontalAlignment="Left"
                 />
 
             <Button
                 x:Name="_StartAttempt_btn" Grid.Row="2"
-                Content="Начать попытку" Height="80" Width="500" Margin="10 30"
+                Content="Начать попытку" Height="80" Width="500" Margin="30 10"
                 FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
+                BorderBrush="#000" BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"
-                Click="_StartAttempt_btn_Click"
+                Click="_StartAttempt_btn_Click" HorizontalAlignment="Left"
                 />
 
             <Button
                 x:Name="_EndAttempt_btn" Grid.Row="3"
-                Content="Завершить попытку" Height="80" Width="500" Margin="10 30"
+                Content="Завершить попытку" Height="80" Width="500" Margin="30 10 10 80"
                 FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
+                BorderBrush="#000" BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"
-                Click="_EndAttempt_btn_Click"
+                Click="_EndAttempt_btn_Click" HorizontalAlignment="Left"
                 />
 
         </Grid>

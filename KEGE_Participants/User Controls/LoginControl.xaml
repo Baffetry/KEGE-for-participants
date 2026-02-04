@@ -55,7 +55,7 @@
                             x:Name="Login_SecondName"
                             d:Text="##########" MaxLength="30"
                             FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
-                            Margin="5" TextWrapping="Wrap"
+                            Margin="5" TextWrapping="Wrap" BorderThickness="0"
                             />
 
                     </Border>
@@ -82,7 +82,7 @@
                             x:Name="Login_FirstName"
                             d:Text="##########" MaxLength="30"
                             FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
-                            Margin="5" TextWrapping="Wrap"
+                            Margin="5" TextWrapping="Wrap" BorderThickness="0"
                             />
 
                     </Border>
@@ -109,7 +109,7 @@
                             x:Name="Login_MiddleName"
                             d:Text="##########" MaxLength="30"
                             FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
-                            Margin="5" TextWrapping="Wrap"
+                            Margin="5" TextWrapping="Wrap" BorderThickness="0"
                             />
 
                     </Border>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using KEGE_Station;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
@@ -9,26 +10,34 @@ namespace KEGE_Participants.User_Controls
     /// </summary>
     public partial class SideMenuControl : UserControl
     {
+        public string FirstName => _LoginBoard.FirstName;
+        public string SecondName => _LoginBoard.SecondName;
+        public string MiddleName => _LoginBoard.MiddleName;
+
         public SideMenuControl()
         {
             InitializeComponent();
+            SetButtonBehavior();
+        }
+
+        private void SetButtonBehavior()
+        {
+            // Green
+            ButtonBehavior.Apply(_StartAttempt_btn);
+
+            // Red
+            ButtonBehavior.Apply(_Close_btn, true);
+            ButtonBehavior.Apply(_EndAttempt_btn, true);
         }
 
         private void _Close_btn_Click(object sender, RoutedEventArgs e)
         {
-            if (_Border.Width < 600)
-                if (this.FindResource("ExpandMenu") is Storyboard expandSb)
-                    expandSb.Begin();
-            else
-                Window.GetWindow(this)?.Close();
+            Window.GetWindow(this)?.Close();
         }
 
         private void _StartAttempt_btn_Click(object sender, RoutedEventArgs e)
         {
-            if (this.Resources["CollapseMenu"] is Storyboard sb)
-                sb.Begin();
 
-            _StartAttempt_btn.IsEnabled = false;
         }
 
         private void _EndAttempt_btn_Click(object sender, RoutedEventArgs e)
