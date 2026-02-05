@@ -57,8 +57,10 @@
         </Style>
 
     </Window.Resources>
-    <Viewbox Stretch="Uniform">
+    <Grid Background="#F5F5F5">
+    <Viewbox Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center">
         <Grid 
+            x:Name="_MainGrid"
             Width="1920" Height="1080"
             >
             <Grid.ColumnDefinitions>
@@ -86,4 +88,5 @@
 
         </Grid>
     </Viewbox>
+    </Grid>
 </Window>

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="470"
+             d:DesignHeight="1080" d:DesignWidth="410"
              >
     <UserControl.Resources>
 
@@ -60,13 +60,15 @@
 
             <local:TaskHandlerControl
                 x:Name="_TaskHandler"
-                Margin="30 120 30 5"
+                Margin="30 120 0 5"
                 Grid.Row="1"
+                Width="340"
+                HorizontalAlignment="Left"
                 />
 
             <Button
                 x:Name="_EndAttempt_btn" Grid.Row="2"
-                Content="Завершить попытку" Height="80" Width="400" Margin="30 5"
+                Content="Завершить попытку" Height="80" Width="340" Margin="30 5"
                 FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
                 BorderBrush="#000" BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"

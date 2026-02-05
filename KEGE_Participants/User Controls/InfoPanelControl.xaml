@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="KEGE_Participants.User_Controls.InfoPanelControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
+             mc:Ignorable="d"
+             d:DesignWidth="1200">
+
+    <Border Padding="20">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Border Background="#FFFFFF" 
+                    CornerRadius="15" 
+                    Padding="40" 
+                    MaxWidth="1300" 
+                    HorizontalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="60" Direction="270" Opacity="0.1" ShadowDepth="3"/>
+                </Border.Effect>
+
+                <StackPanel>
+                    <TextBlock 
+                        Text="В заданиях используются следующие соглашения." 
+                        Foreground="#000" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"
+                        FontFamily="Inter, Segoe UI" TextWrapping="Wrap" TextAlignment="Center" />
+
+                    <StackPanel x:Name="ContentArea">
+                        <TextBlock TextWrapping="Wrap" Margin="0,15,0,10" Foreground="#111" FontSize="24">
+                            <Run FontWeight="Bold" Text="1. Обозначения для логических связок (операций):"/>
+                        </TextBlock>
+
+                        <StackPanel Margin="30,0,0,25">
+                            <TextBlock TextWrapping="Wrap" Foreground="#333" FontSize="22" Margin="0,8">
+                                <Run FontWeight="Bold" Text="а)"/> 
+                                    отрицание (НЕ) обозначается ¬;
+                                
+                            </TextBlock>
+                            
+                            <TextBlock TextWrapping="Wrap" Foreground="#333" FontSize="22" Margin="0,8">
+                                <Run FontWeight="Bold" Text="b)"/> 
+                                    конъюнкция (И) обозначается ∧ либо &amp;;
+                                
+                            </TextBlock>
+                            
+                            <TextBlock TextWrapping="Wrap" Foreground="#333" FontSize="22" Margin="0,8">
+                                <Run FontWeight="Bold" Text="c)"/> 
+                                    дизъюнкция (ИЛИ) обозначается ∨ либо |;
+                                
+                            </TextBlock>
+                            
+                            <TextBlock TextWrapping="Wrap" Foreground="#333" FontSize="22" Margin="0,8">
+                                <Run FontWeight="Bold" Text="d)"/> 
+                                    следование обозначается →;
+                                
+                            </TextBlock>
+                            
+                            <TextBlock TextWrapping="Wrap" Foreground="#333" FontSize="22" Margin="0,8">
+                                <Run FontWeight="Bold" Text="e)"/> 
+                                    тождество обозначается ≡;
+                                
+                            </TextBlock>
+                            
+                        </StackPanel>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20" Foreground="#333" FontSize="24" LineHeight="28">
+                            <Run FontWeight="Bold" Text="2. Равносильные выражения:"/> 
+                                содержащие переменные, называются равносильными (эквивалентными), если их значения совпадают 
+                                при любых значениях переменных.
+                            
+                        </TextBlock>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20" Foreground="#333" FontSize="24" LineHeight="28">
+                            <Run FontWeight="Bold" Text="3. Приоритеты:"/> 
+                                инверсия (отрицание), конъюнкция (логическое умножение), дизъюнкция (логическое сложение), 
+                                импликация (следование), тождество.
+                            
+                        </TextBlock>
+
+                        <TextBlock TextWrapping="Wrap" Margin="0,20" Foreground="#333" FontSize="24" LineHeight="28">
+                            <Run FontWeight="Bold" Text="4. Мбайт и Кбайт:"/> 
+                                используются в традиционном для информатики смысле – как степени двойки.
+                            
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+    </Border>
+</UserControl>

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
              mc:Ignorable="d" 
-             Width="400">
+             >
     <UserControl.Resources>
 
         <ControlTemplate x:Key="NoMouseOverButtonTemplate" TargetType="Button">
@@ -70,7 +70,7 @@
         BorderBrush="#000"
         BorderThickness="3"
         CornerRadius="15"
-         Width="400"
+        Width="340"
         HorizontalAlignment="Center" 
         VerticalAlignment="Top"
         Padding="5"
