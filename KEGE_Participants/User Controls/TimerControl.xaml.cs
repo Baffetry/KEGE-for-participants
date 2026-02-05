@@ -20,34 +20,34 @@ namespace KEGE_Participants.User_Controls
 
         public void Start(int hours, int minutes, int seconds)
         {
-            _time = new TimeSpan(hours, minutes, seconds);
+            //_time = new TimeSpan(hours, minutes, seconds);
 
-            Timer_TextBlock.Text = _time.ToString(@"hh\:mm\:ss");
+            //Timer_TextBlock.Text = _time.ToString(@"hh\:mm\:ss");
 
-            if (_timer != null) _timer.Stop();
+            //if (_timer != null) _timer.Stop();
 
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += (s, e) =>
-            {
-                if (_time.TotalSeconds > 0)
-                {
-                    _time = _time.Subtract(TimeSpan.FromSeconds(1));
-                    // Предположим, ваш TextBlock в TimerControl называется TimerText
-                    Timer_TextBlock.Text = _time.ToString(@"hh\:mm\:ss");
+            //_timer = new DispatcherTimer();
+            //_timer.Interval = TimeSpan.FromSeconds(1);
+            //_timer.Tick += (s, e) =>
+            //{
+            //    if (_time.TotalSeconds > 0)
+            //    {
+            //        _time = _time.Subtract(TimeSpan.FromSeconds(1));
+            //        // Предположим, ваш TextBlock в TimerControl называется TimerText
+            //        Timer_TextBlock.Text = _time.ToString(@"hh\:mm\:ss");
 
-                    if (_time.TotalMinutes < 5)
-                        Timer_TextBlock.Foreground = (Brush)new BrushConverter().ConvertFrom("#E63946");
-                    else if (_time.TotalMinutes < 1)
-                        Timer_TextBlock.Foreground = (Brush)new BrushConverter().ConvertFrom("9D1C24");
-                }
-                else
-                {
-                    _timer.Stop();
-                    MessageBox.Show("Время вышло!");
-                }
-            };
-            _timer.Start();
+            //        if (_time.TotalMinutes < 5)
+            //            Timer_TextBlock.Foreground = (Brush)new BrushConverter().ConvertFrom("#E63946");
+            //        else if (_time.TotalMinutes < 1)
+            //            Timer_TextBlock.Foreground = (Brush)new BrushConverter().ConvertFrom("9D1C24");
+            //    }
+            //    else
+            //    {
+            //        _timer.Stop();
+            //        MessageBox.Show("Время вышло!");
+            //    }
+            //};
+            //_timer.Start();
         }
 
         public void Stop()

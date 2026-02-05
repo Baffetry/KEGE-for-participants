@@ -143,7 +143,9 @@ namespace KEGE_Participants.User_Controls
 
         private void Answer_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_isUpdating || Save_btn == null) return;
+            string color = new BrushConverter().ConvertFrom("#66D9FF").ToString();
+
+            if (_isUpdating && Save_btn.Background.ToString() != color) return;
 
             ParticipantAnswer = string.Empty;
             Save_btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
