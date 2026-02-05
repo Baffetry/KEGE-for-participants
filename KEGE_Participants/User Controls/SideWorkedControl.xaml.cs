@@ -37,6 +37,7 @@ namespace KEGE_Participants.User_Controls
 
         private void _EndAttempt_btn_Click(object sender, RoutedEventArgs e)
         {
+            PageFacade.Instance.SetContent(new MainLogoControl());
             _facade.OpenMainMenu();
         }
     }

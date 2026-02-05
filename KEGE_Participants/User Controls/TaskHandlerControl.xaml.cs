@@ -11,6 +11,7 @@ namespace KEGE_Participants.User_Controls
     /// </summary>
     public partial class TaskHandlerControl : UserControl
     {
+        private Dictionary<string, Button> _taskButtons;
         private Dictionary<string, TaskViewControl> _panels;
 
         private const int COLUMNS = 4;
@@ -19,6 +20,8 @@ namespace KEGE_Participants.User_Controls
         {
             InitializeComponent();
             SetHandlerGrid();
+
+            _taskButtons = new Dictionary<string, Button>();
         }
 
         private void SetHandlerGrid()
@@ -49,8 +52,8 @@ namespace KEGE_Participants.User_Controls
         public void FillGridWithButtons(TestingOption option)
         {
             _panels = new Dictionary<string, TaskViewControl>();
-
             _TaskHandlerGrid.Children.Clear();
+            _taskButtons.Clear();
 
             var buttonTemplate = (ControlTemplate)this.FindResource("NoMouseOverButtonTemplate");
 
@@ -61,13 +64,14 @@ namespace KEGE_Participants.User_Controls
             Grid.SetRow(infBtn, 0);
             Grid.SetColumn(infBtn, 0);
             _TaskHandlerGrid.Children.Add(infBtn);
-
+            _taskButtons["i"] = infBtn;
             // Задания
             for (int i = 0; i < count; i++)
             {
                 string content = (i + 1).ToString();
 
                 var btn = CreateButton(content, buttonTemplate);
+                _taskButtons[content] = btn;
 
                 int index = i + 1;
                 int row = index / COLUMNS;
@@ -76,7 +80,23 @@ namespace KEGE_Participants.User_Controls
                 Grid.SetRow(btn, row);
                 Grid.SetColumn(btn, col);
 
-                _panels[content] = new TaskViewControl(option.TaskList[i]);
+                var taskView = new TaskViewControl(option.TaskList[i]);
+                taskView.TaskId = content;
+
+                taskView.AnswerSaved += (id) =>
+                {
+                    if (_taskButtons.ContainsKey(id))
+                        _taskButtons[id].Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
+                };
+
+                taskView.AnswerChanged += (id) => {
+                    if (_taskButtons.ContainsKey(id))
+                    {
+                        _taskButtons[id].Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
+                    }
+                };
+
+                _panels[content] = /*new TaskViewControl(option.TaskList[i]);*/ taskView;
                 _TaskHandlerGrid.Children.Add(btn);
             }
         }
@@ -121,7 +141,14 @@ namespace KEGE_Participants.User_Controls
         private void TaskBtn_MouseLeave(object sender, MouseEventArgs e)
         {
             if (sender is Button btn)
-                btn.Background = Brushes.White;
+            {
+                string content = btn.Content.ToString();
+
+                if (_panels.ContainsKey(content) && !string.IsNullOrWhiteSpace(_panels[content].ParticipantAnswer))
+                    btn.Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
+                else
+                    btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
+            }
         }
 
         private void TaskBtn_Click(object sender, RoutedEventArgs e)
@@ -129,14 +156,18 @@ namespace KEGE_Participants.User_Controls
             var btn = (Button)sender;
             var content = btn.Content.ToString();
 
+
+            foreach (var panel in _panels.Values)
+                panel.ResetUnsavedChanges();
+
             if ("i".Equals(content))
             {
-                PageFacade.Instance.SetTaskContent(new InfoPanelControl());
+                PageFacade.Instance.SetContent(new InfoPanelControl());
             }
             else
             {
                 string taskNumber = btn.Content.ToString();
-                PageFacade.Instance.SetTaskContent(_panels[taskNumber]);
+                PageFacade.Instance.SetContent(_panels[taskNumber]);
             }
         }
     }

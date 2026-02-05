@@ -54,10 +54,11 @@ namespace KEGE_Participants.User_Controls
                 {
                     var json = File.ReadAllText(ofd.FileName);
                     option = JsonSerializer.Deserialize<TestingOption>(json);
-                }
 
-                _taskHandler.FillGridWithButtons(option);
-                _facade.OpenWorkedArea();
+
+                    _taskHandler.FillGridWithButtons(option);
+                    _facade.OpenWorkedArea();
+                }
             }
             catch (Exception ex)
             {

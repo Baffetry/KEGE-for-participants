@@ -46,7 +46,7 @@ namespace KEGE_Participants
             _workedArea.Visible();
         }
 
-        public void SetTaskContent(UserControl control)
+        public void SetContent(UserControl control)
         {
             if (_mainGrid is null) return;
 
