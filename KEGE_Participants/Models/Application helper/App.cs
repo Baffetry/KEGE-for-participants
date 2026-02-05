@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace KEGE_Participants
@@ -32,18 +33,41 @@ namespace KEGE_Participants
 
             if (!File.Exists(cfgFile))
             {
-                key = "ConfigurationPath";
-                value = "D:\\";
+                string defaultCfg = "ConfigurationPath D:\\\n TimeLimit 3:50:00";
 
                 File.Create(cfgFile);
-                File.WriteAllText(cfgFile, $"{key} {value}");
+                File.WriteAllText(cfgFile, defaultCfg);
             }
             else
             {
-                string[] line = File.ReadAllText(cfgFile).Split();
+                string[] lines = File.ReadAllLines(cfgFile);
 
-                key = line[0];
-                value = line[1];
+                foreach (var line in lines)
+                {
+                    var pages = line.Split(new[] { ' ' }, 
+                        StringSplitOptions.RemoveEmptyEntries);
+
+                    key = pages[0];
+                    value = pages[1];
+
+                    if (Regex.Match(value, @"^[0-9]{1,2}:[0-5][0-9]:[0-5][0-9]").Success)
+                    {
+                        var time = value.Split(new[] { ':' },
+                            StringSplitOptions.RemoveEmptyEntries);
+
+                        string hours = time[0];
+                        string minutes = time[1];
+                        string seconds = time[2];
+
+                        App.SetResourceString(key + "_hours", hours);
+                        App.SetResourceString(key + "_minutes", minutes);
+                        App.SetResourceString(key + "_seconds", seconds);
+
+                        continue;
+                    }
+
+                    App.SetResourceString(key, value);
+                }
             }
 
             SetResourceString(key, value);

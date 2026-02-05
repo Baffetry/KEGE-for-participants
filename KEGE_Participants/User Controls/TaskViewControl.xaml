@@ -35,25 +35,38 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Padding="20">
-            <Border BorderBrush="#EEE" BorderThickness="1" CornerRadius="5" HorizontalAlignment="Left" Margin="0,10">
+        <ScrollViewer 
+            Margin="0 10 0 0"
+            Grid.Row="0" VerticalScrollBarVisibility="Auto" Padding="80"
+            HorizontalAlignment="Left"
+            >
+            
+            <Border 
+                Background="#FFFFFF" 
+                CornerRadius="20" 
+                Margin="20"
+                Padding="30" 
+                MaxWidth="1300" 
+                HorizontalAlignment="Center"
+                >
+
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="30" Direction="270" Opacity="0.3" ShadowDepth="3"/>
+                    <DropShadowEffect 
+                        BlurRadius="40" 
+                        ShadowDepth="0" 
+                        Opacity="0.2" 
+                        Color="#000000"
+                        />
+                    
                 </Border.Effect>
 
-                <Image 
-                    x:Name="TaskImage" 
-                    Margin="30 0 0 0"
-                    Stretch="Uniform" 
-                    StretchDirection="DownOnly"
-                    RenderOptions.BitmapScalingMode="HighQuality"
-                    >
-                    
-                    <Image.Effect>
-                        <DropShadowEffect BlurRadius="10" Opacity="0.05" ShadowDepth="1" Color="Black"/>
-                    </Image.Effect>
-                    
-                </Image>
+                <Border BorderBrush="#F0F0F0" BorderThickness="0" CornerRadius="10">
+                    <Image 
+                       x:Name="TaskImage" 
+                       Stretch="Uniform" 
+                       StretchDirection="DownOnly"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                </Border>
             </Border>
         </ScrollViewer>
 
@@ -65,7 +78,10 @@
             Padding="40,20"
             >
             <Border.Effect>
-                <DropShadowEffect BlurRadius="30" Direction="270" Opacity="0.3" ShadowDepth="3"/>
+                <DropShadowEffect BlurRadius="40" 
+                              ShadowDepth="0" 
+                              Opacity="0.2" 
+                              Color="#000000"/>
             </Border.Effect>
 
             <StackPanel HorizontalAlignment="Left">
@@ -107,9 +123,14 @@
                             <Image Source="/Resources/Icons/save96x96.png" 
                                    Width="50" Height="50"/>
                         </StackPanel>
+                        
                     </Button>
+                    
                 </StackPanel>
+                
             </StackPanel>
+            
         </Border>
+        
     </Grid>
 </UserControl>

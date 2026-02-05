@@ -41,6 +41,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <Button
@@ -58,21 +59,29 @@
 
             </Button>
 
+            <local:TimerControl 
+                x:Name="_Timer" Grid.Row="1"
+                Margin="0 50 0 0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                
+                />
+
             <local:TaskHandlerControl
                 x:Name="_TaskHandler"
-                Margin="30 120 0 5"
-                Grid.Row="1"
+                Margin="0 0 0 20"
+                Grid.Row="2"
                 Width="340"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Center"
                 />
 
             <Button
-                x:Name="_EndAttempt_btn" Grid.Row="2"
-                Content="Завершить попытку" Height="80" Width="340" Margin="30 5"
+                x:Name="_EndAttempt_btn" Grid.Row="3"
+                Content="Завершить попытку" Height="80" Width="340"
                 FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
                 BorderBrush="#000" BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"
-                Click="_EndAttempt_btn_Click" HorizontalAlignment="Left"
+                Click="_EndAttempt_btn_Click" HorizontalAlignment="Center"
                 />
 
         </Grid>

@@ -1,10 +1,6 @@
 ﻿using KEGE_Station;
-using Microsoft.Win32;
-using System.IO;
-using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
-using Testing_Option;
 
 namespace KEGE_Participants.User_Controls
 {

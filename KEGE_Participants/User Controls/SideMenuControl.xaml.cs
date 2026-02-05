@@ -1,5 +1,4 @@
-﻿using KEGE_Participants.Models.Exceptions;
-using KEGE_Station;
+﻿using KEGE_Station;
 using Microsoft.Win32;
 using System.IO;
 using System.Text.Json;

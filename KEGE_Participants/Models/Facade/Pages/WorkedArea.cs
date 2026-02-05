@@ -14,12 +14,23 @@ namespace KEGE_Participants.Models.Facade.Pages
 
         public void Collapsed()
         {
+            _worked._Timer.Stop();
             _worked.Visibility = Visibility.Collapsed;
         }
 
         public void Visible()
         {
+            StartTimer();
             _worked.Visibility = Visibility.Visible;
+        }
+
+        private void StartTimer()
+        {
+            int hours = int.Parse(App.GetResourceString("TimeLimit_hours"));
+            int minutes = int.Parse(App.GetResourceString("TimeLimit_minutes"));
+            int seconds = int.Parse(App.GetResourceString("TimeLimit_seconds"));
+
+            _worked._Timer.Start(hours, minutes, seconds);
         }
     }
 }

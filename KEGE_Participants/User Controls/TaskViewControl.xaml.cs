@@ -1,5 +1,8 @@
-﻿using System.Windows.Controls;
+﻿using System.IO;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Task_Data;
 
 namespace KEGE_Participants.User_Controls
@@ -21,6 +24,34 @@ namespace KEGE_Participants.User_Controls
         {
             InitializeComponent();
             _data = data;
+
+            SetImage(_data.Image);
+        }
+
+        public void SetImage(byte[] imageBytes)
+        {
+            if (imageBytes is null || imageBytes.Length == 0) return;
+
+            try
+            {
+                var bitmap = new BitmapImage();
+
+                using (var ms = new MemoryStream(imageBytes))
+                {
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = ms;
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                }
+
+                bitmap.Freeze();
+                TaskImage.Source = bitmap;
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Ошибка загрузки изображения");
+                return;
+            }
         }
 
         public void ResetUnsavedChanges()
@@ -39,35 +70,15 @@ namespace KEGE_Participants.User_Controls
                 Save_btn.Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
                 AnswerSaved?.Invoke(TaskId);
             }
-            else
-            {
-                ParticipantAnswer = string.Empty;
-                Save_btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
-                AnswerChanged?.Invoke(TaskId);
-            }
         }
 
         private void Answer_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (Save_btn == null) return;
 
-            var skyBlue = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
-
             ParticipantAnswer = string.Empty;
             Save_btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
             AnswerChanged?.Invoke(TaskId);
-
-            //if (Save_btn.Background.ToString() == skyBlue.ToString())
-            //{
-            //    Save_btn.Background = Brushes.White;
-            //    AnswerChanged?.Invoke(TaskId);
-            //}
-            //var skyBlue = ColorConverter.ConvertFromString("#66D9FF");
-
-            //var btn = (Button)sender;
-
-            //if (btn.Background.Equals(skyBlue))
-            //    Save_btn.Background = (Brush)ColorConverter.ConvertFromString("#FFFFFF");
         }
     }
 }
