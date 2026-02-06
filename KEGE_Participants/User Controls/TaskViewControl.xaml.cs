@@ -186,7 +186,9 @@ namespace KEGE_Participants.User_Controls
         {
             string color = new BrushConverter().ConvertFrom("#66D9FF").ToString();
 
-            if (_isUpdating && Save_btn.Background.ToString() != color) return;
+            bool flag = Save_btn.Background.ToString() != color && TableSave_btn.Background.ToString() != color;
+
+            if (_isUpdating && flag) return;
 
             ParticipantAnswer = string.Empty;
             Save_btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
