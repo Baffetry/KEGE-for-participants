@@ -53,6 +53,13 @@ namespace KEGE_Participants
             _workedArea.Visible();
         }
 
+        public void OpenSettings()
+        {
+            CheckInitialization();
+            _workedArea.Collapsed();
+            _mainMenu.OpenSettings();
+        }
+
         public void SetContent(UserControl control)
         {
             if (_mainGrid is null) return;

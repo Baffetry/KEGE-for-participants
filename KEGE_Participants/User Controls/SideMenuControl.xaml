@@ -42,24 +42,46 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Button
-                x:Name="_Close_btn"
-                Height="70" Width="70" Margin="30"
-                HorizontalAlignment="Left" BorderBrush="#000"
-                BorderThickness="3" Background="#fff"
-                Template="{StaticResource NoMouseOverButtonTemplate}"
-                Click="_Close_btn_Click"
-                >
-                <Image 
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    x:Name="_Close_btn"
+                    Height="70" Width="70" Margin="30 30 10 30"
+                    HorizontalAlignment="Left" BorderBrush="#000"
+                    BorderThickness="3" Background="#fff"
+                    Template="{StaticResource NoMouseOverButtonTemplate}"
+                    Click="_Close_btn_Click"
+                    >
+                    <Image 
                     Source="/Resources/Icons/buttonClose96x96.png" 
                     Height="50" Width="50"
                     />
-                
-            </Button>
+
+                </Button>
+
+                <Button 
+                    x:Name="Settings_btn" 
+                    Width="70" Height="70" Margin="0,0,10,0" 
+                    BorderBrush="#000"
+                    BorderThickness="3" Background="#fff"
+                    Template="{StaticResource NoMouseOverButtonTemplate}" 
+                    Click="Settings_btn_Click">
+                    <Image Source="/Resources/Icons/settings96x96.png" Margin="10"/>
+                </Button>
+
+                <Button 
+                    x:Name="Home_btn" Width="70" Height="70" Margin="0,0,10,0" 
+                    Template="{StaticResource NoMouseOverButtonTemplate}" 
+                    BorderBrush="#000" BorderThickness="3" Background="#fff"
+                    Click="Home_btn_Click">
+                    <Image Source="/Resources/Icons/home96x96.png" Margin="10 5 10 10"/>
+                </Button>
+            </StackPanel>
+
 
             <local:LoginControl
                 x:Name="_LoginBoard"
                 Margin="30 120 30 5"
+                Visibility="Visible"
                 Grid.Row="1" Width="400"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
@@ -74,15 +96,6 @@
                 Click="_StartAttempt_btn_Click" HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 />
-
-            <!--<Button
-                x:Name="_EndAttempt_btn" Grid.Row="3"
-                Content="Завершить попытку" Height="80" Width="400" Margin="30 10 10 80"
-                FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
-                BorderBrush="#000" BorderThickness="3" Background="#fff"
-                Template="{StaticResource NoMouseOverButtonTemplate}"
-                Click="_EndAttempt_btn_Click" HorizontalAlignment="Left"
-                />-->
 
         </Grid>
     </Border>

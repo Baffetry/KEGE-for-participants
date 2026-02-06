@@ -1,5 +1,4 @@
-﻿using KEGE_Participants.Models.Factory;
-using KEGE_Participants.Models.Factory.UIElements;
+﻿using KEGE_Participants.Models.Factory.UIElements;
 using KEGE_Participants.Models.Factory.UIElements_factories;
 using System.IO;
 using System.Windows;

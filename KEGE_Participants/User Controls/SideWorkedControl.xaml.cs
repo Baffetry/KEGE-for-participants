@@ -1,7 +1,5 @@
 ﻿using KEGE_Station;
-using Participant_Result;
 using System.IO;
-using System.Runtime.InteropServices.Marshalling;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,36 +30,59 @@ namespace KEGE_Participants.User_Controls
 
         private void _Close_btn_Click(object sender, RoutedEventArgs e)
         {
+            FinishExam();
             Window.GetWindow(this).Close();
         }
 
-        private void _EndAttempt_btn_Click(object sender, RoutedEventArgs e)
+        public void FinishExam(bool isAuto = false)
         {
+            // 1. Если нажал человек — спрашиваем подтверждение
+            if (!isAuto)
+            {
+                var confirm = MessageBox.Show(
+                    "Вы уверены, что хотите завершить попытку?",
+                    "Подтверждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (confirm != MessageBoxResult.Yes) return;
+            }
+
             try
             {
                 var collection = _TaskHandler.GetPanels();
                 ResultCollector.Instance.SetAnswers(collection);
-
                 var result = ResultCollector.Instance.GetResult();
 
-                string dirPath = @"D:\Temp\Results\";
-                string filePath = dirPath + $"{result.SecondName}_{result.Name}_{result.MiddleName}_{DateTime.Now:dd-MM-yyyy}.json";
+                string dirPath = App.GetResourceString("SavedPath");
 
+                if (!Directory.Exists(dirPath)) 
+                    Directory.CreateDirectory(dirPath);
 
-                string json = JsonSerializer.Serialize(result, new JsonSerializerOptions
-                {
-                    WriteIndented = true,
-                });
+                string fileName = $"{result.SecondName}_{result.Name}_{result.MiddleName}_{DateTime.Now:dd-MM-yyyy_HH-mm}.json";
+                string filePath = Path.Combine(dirPath, fileName);
 
+                string json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(filePath, json);
+
+                MessageBox.Show(
+                    "Попытка завершена. Ваши ответы успешно сохранены.",
+                    "Пробный экзамен окончен",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
 
                 PageFacade.Instance.SetContent(new MainLogoControl());
                 _facade.OpenMainMenuWithOutButton();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Ошибка при сохранении: {ex.Message}");
             }
+        }
+
+        private void _EndAttempt_btn_Click(object sender, RoutedEventArgs e)
+        {
+            FinishExam();
         }
     }
 }

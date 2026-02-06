@@ -79,8 +79,16 @@
                 Grid.Column="1" Visibility="Visible"
                 />
 
-            <!--|| Решение задач ||-->
+            <!--|| Настройки ||-->
+            <userControl:SettingsControl
+                x:Name="_Settings"
+                Grid.Column="1"
+                Visibility="Collapsed"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                />
 
+            <!--|| Решение задач ||-->
             <userControl:SideWorkedControl
                 x:Name="WorkedArea_SideMenu"
                 Grid.Column="0" Visibility="Collapsed"

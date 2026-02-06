@@ -1,4 +1,5 @@
-﻿using KEGE_Station;
+﻿using Exceptions;
+using KEGE_Station;
 using Microsoft.Win32;
 using System.IO;
 using System.Text.Json;
@@ -44,6 +45,11 @@ namespace KEGE_Participants.User_Controls
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(FirstName)) throw new EmptyLogInExcaption("Вы не ввели имя");
+                if (string.IsNullOrWhiteSpace(SecondName)) throw new EmptyLogInExcaption("Вы не ввели фамилию");
+                if (string.IsNullOrWhiteSpace(MiddleName)) throw new EmptyLogInExcaption("Вы не ввели отчество");
+
+
                 var resultCollector = ResultCollector.Instance;
 
                 resultCollector.Name = FirstName;
@@ -53,24 +59,35 @@ namespace KEGE_Participants.User_Controls
                 TestingOption option = null;
                 string cfgPath = App.GetResourceString("ConfigurationPath");
 
-                var ofd = new OpenFileDialog { InitialDirectory = cfgPath };
+                var json = File.ReadAllText(cfgPath);
+                option = JsonSerializer.Deserialize<TestingOption>(json);
 
-                if (ofd.ShowDialog() is true)
-                {
-                    var json = File.ReadAllText(ofd.FileName);
-                    option = JsonSerializer.Deserialize<TestingOption>(json);
+                resultCollector.OptionId = option.OptionID;
 
-                    resultCollector.OptionId = option.OptionID;
-
-                    _taskHandler.FillGridWithButtons(option);
-                    _facade.OpenWorkedArea();
-                }
+                _taskHandler.FillGridWithButtons(option);
+                _taskHandler.SelectedDefaultPanel();
+                _facade.OpenWorkedArea();
+            }
+            catch (EmptyLogInExcaption ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Неверный путь к файлу");
                 return;
             }
+        }
+
+        private void Settings_btn_Click(object sender, RoutedEventArgs e)
+        {
+            _facade.OpenSettings();
+        }
+
+        private void Home_btn_Click(object sender, RoutedEventArgs e)
+        {
+            _facade.OpenMainMenu();
         }
     }
 }

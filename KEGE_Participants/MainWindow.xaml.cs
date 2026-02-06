@@ -18,7 +18,7 @@ namespace KEGE_Participants
             PageFacade.Instance.GridInit(_MainGrid);
             
             _facade.Initialize(
-                new MainMenu(MainMenu_Logo, MainMenu_SideMenu),
+                new MainMenu(MainMenu_Logo, MainMenu_SideMenu, _Settings),
                 new WorkedArea(WorkedArea_SideMenu)
             );
             

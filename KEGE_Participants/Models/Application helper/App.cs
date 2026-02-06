@@ -28,50 +28,39 @@ namespace KEGE_Participants
         public static void InitializeConfig()
         {
             string cfgFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
-            string key = string.Empty, value = string.Empty;
-
 
             if (!File.Exists(cfgFile))
             {
-                string defaultCfg = "ConfigurationPath D:\\\n TimeLimit 3:50:00";
-
-                File.Create(cfgFile);
+                // Значения по умолчанию, если файла нет
+                string defaultCfg = "ConfigurationPath D:\\\n" +
+                                    "SavedPath D:\\\n" +
+                                    "TimeLimit 03:55:00";
                 File.WriteAllText(cfgFile, defaultCfg);
             }
-            else
+
+            string[] lines = File.ReadAllLines(cfgFile);
+            foreach (var line in lines)
             {
-                string[] lines = File.ReadAllLines(cfgFile);
+                if (string.IsNullOrWhiteSpace(line)) continue;
 
-                foreach (var line in lines)
+                // Делим строку на Ключ и Значение (по первому пробелу)
+                var parts = line.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length < 2) continue;
+
+                string key = parts[0];
+                string value = parts[1];
+
+                // Если значение похоже на время (HH:mm:ss)
+                if (Regex.IsMatch(value, @"^[0-9]{1,2}:[0-5][0-9]:[0-5][0-9]"))
                 {
-                    var pages = line.Split(new[] { ' ' }, 
-                        StringSplitOptions.RemoveEmptyEntries);
-
-                    key = pages[0];
-                    value = pages[1];
-
-                    if (Regex.Match(value, @"^[0-9]{1,2}:[0-5][0-9]:[0-5][0-9]").Success)
-                    {
-                        var time = value.Split(new[] { ':' },
-                            StringSplitOptions.RemoveEmptyEntries);
-
-                        string hours = time[0];
-                        string minutes = time[1];
-                        string seconds = time[2];
-
-                        App.SetResourceString(key + "_hours", hours);
-                        App.SetResourceString(key + "_minutes", minutes);
-                        App.SetResourceString(key + "_seconds", seconds);
-
-                        continue;
-                    }
-
-                    App.SetResourceString(key, value);
+                    var time = value.Split(':');
+                    SetResourceString(key + "_hours", time[0]);
+                    SetResourceString(key + "_minutes", time[1]);
+                    SetResourceString(key + "_seconds", time[2]);
                 }
+                else
+                    SetResourceString(key, value);
             }
-
-            SetResourceString(key, value);
-
         }
     }
 }

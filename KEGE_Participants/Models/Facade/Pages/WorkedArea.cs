@@ -9,7 +9,12 @@ namespace KEGE_Participants.Models.Facade.Pages
 
         public WorkedArea(SideWorkedControl worked)
         {
-            _worked = worked; 
+            _worked = worked;
+
+            _worked._Timer.TimeUp += () =>
+            {
+                _worked.FinishExam(true);
+            };
         }
 
         public void Collapsed()

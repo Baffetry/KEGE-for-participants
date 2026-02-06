@@ -30,6 +30,12 @@ namespace KEGE_Participants.User_Controls
             return _panels;
         }
 
+        public void SelectedDefaultPanel()
+        {
+            if (_taskButtons.ContainsKey("i"))
+                TaskBtn_Click(_taskButtons["i"], new RoutedEventArgs());
+        }
+
         private void SetHandlerGrid()
         {
             _TaskHandlerGrid.ColumnDefinitions.Clear();

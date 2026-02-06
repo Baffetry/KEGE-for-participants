@@ -10,6 +10,8 @@ namespace KEGE_Participants.User_Controls
     /// </summary>
     public partial class TimerControl : UserControl
     {
+        public event Action TimeUp;
+
         private DispatcherTimer _timer;
         private TimeSpan _time;
 
@@ -45,6 +47,7 @@ namespace KEGE_Participants.User_Controls
                 {
                     _timer.Stop();
                     MessageBox.Show("Время вышло!");
+                    TimeUp?.Invoke();
                 }
             };
             _timer.Start();
