@@ -44,6 +44,12 @@ namespace KEGE_Participants.User_Controls
         {
             try
             {
+                var resultCollector = ResultCollector.Instance;
+
+                resultCollector.Name = FirstName;
+                resultCollector.SecondName = SecondName;
+                resultCollector.MiddleName = MiddleName;
+
                 TestingOption option = null;
                 string cfgPath = App.GetResourceString("ConfigurationPath");
 
@@ -54,6 +60,7 @@ namespace KEGE_Participants.User_Controls
                     var json = File.ReadAllText(ofd.FileName);
                     option = JsonSerializer.Deserialize<TestingOption>(json);
 
+                    resultCollector.OptionId = option.OptionID;
 
                     _taskHandler.FillGridWithButtons(option);
                     _facade.OpenWorkedArea();

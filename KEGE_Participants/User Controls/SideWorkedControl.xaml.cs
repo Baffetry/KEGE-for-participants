@@ -1,4 +1,8 @@
 ﻿using KEGE_Station;
+using Participant_Result;
+using System.IO;
+using System.Runtime.InteropServices.Marshalling;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -33,8 +37,31 @@ namespace KEGE_Participants.User_Controls
 
         private void _EndAttempt_btn_Click(object sender, RoutedEventArgs e)
         {
-            PageFacade.Instance.SetContent(new MainLogoControl());
-            _facade.OpenMainMenu();
+            try
+            {
+                var collection = _TaskHandler.GetPanels();
+                ResultCollector.Instance.SetAnswers(collection);
+
+                var result = ResultCollector.Instance.GetResult();
+
+                string dirPath = @"D:\Temp\Results\";
+                string filePath = dirPath + $"{result.SecondName}_{result.Name}_{result.MiddleName}_{DateTime.Now:dd-MM-yyyy}.json";
+
+
+                string json = JsonSerializer.Serialize(result, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+
+                File.WriteAllText(filePath, json);
+
+                PageFacade.Instance.SetContent(new MainLogoControl());
+                _facade.OpenMainMenuWithOutButton();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

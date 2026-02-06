@@ -32,6 +32,13 @@ namespace KEGE_Participants
         }
 
         // Взаимодействие
+        public void OpenMainMenuWithOutButton()
+        {
+            CheckInitialization();
+            _workedArea.Collapsed();
+            _mainMenu.VisiableWithOutButton();
+        }
+
         public void OpenMainMenu()
         {
             CheckInitialization();

@@ -53,6 +53,47 @@ namespace KEGE_Participants.User_Controls
             SetupTaskLayout();
         }
 
+        public string GetAnswer()
+        {
+            if (Bottom_Answer_Border.Visibility == Visibility.Visible)
+            {
+                return string.IsNullOrWhiteSpace(Answer_TextBox.Text)
+                    ? "%noAnswer%"
+                    : Answer_TextBox.Text.Trim();
+            }
+
+            var allCells = new List<string>();
+            var lastFilledIndex = -1;
+
+            for (int row = 0; row < Answer_Table_Grid.RowDefinitions.Count; row++)
+            {
+                for (int col = 1; col <= 2; col++)
+                {
+                    var cellBorder = Answer_Table_Grid.Children
+                        .OfType<Border>()
+                        .FirstOrDefault(
+                            idx => Grid.GetRow(idx) == row &&
+                            Grid.GetColumn(idx) == col
+                        );
+
+                    if (cellBorder?.Child is TextBox tb)
+                    {
+                        string text = tb.Text?.Trim();
+                        bool isEmpty = string.IsNullOrWhiteSpace(text);
+
+                        allCells.Add(isEmpty ? "%noAnswer%" : text);
+
+                        if (!isEmpty)
+                            lastFilledIndex = allCells.Count - 1;
+                    }
+                }
+            }
+
+            if (lastFilledIndex == -1) return "%noAnswer%";
+
+            return string.Join(" ", allCells);
+        }
+
         public void SetImage(byte[] imageBytes)
         {
             if (imageBytes is null || imageBytes.Length == 0) return;

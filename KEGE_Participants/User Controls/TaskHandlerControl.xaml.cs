@@ -25,6 +25,11 @@ namespace KEGE_Participants.User_Controls
             _taskButtons = new Dictionary<string, Button>();
         }
 
+        public Dictionary<string, TaskViewControl> GetPanels()
+        {
+            return _panels;
+        }
+
         private void SetHandlerGrid()
         {
             _TaskHandlerGrid.ColumnDefinitions.Clear();

@@ -20,6 +20,13 @@ namespace KEGE_Participants.Models.Facade
             _sideMenu.Visibility = Visibility.Collapsed;
         }
 
+        public void VisiableWithOutButton()
+        {
+            _mainLogo.Visibility = Visibility.Visible;
+            _sideMenu.Visibility = Visibility.Visible;
+            _sideMenu._StartAttempt_btn.Visibility = Visibility.Collapsed;
+        }
+
         public void Visible()
         {
             _mainLogo.Visibility = Visibility.Visible;
