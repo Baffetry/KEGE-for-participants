@@ -1,8 +1,10 @@
 ﻿using KEGE_Participants.Models.Factory.UIElements;
 using KEGE_Participants.Models.Factory.UIElements_factories;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -15,6 +17,9 @@ namespace KEGE_Participants.User_Controls
     /// </summary>
     public partial class TaskViewControl : UserControl
     {
+        public event Action<string> AnswerSaved;
+        public event Action<string> AnswerChanged;
+
         private readonly List<(string taskNumber, int rowCount)> _tableConfigs = new List<(string taskNumber, int rowCount)>()
         {
             ("17", 1),
@@ -25,12 +30,11 @@ namespace KEGE_Participants.User_Controls
             ("27", 2)
         };
 
-        public event Action<string> AnswerSaved;
-        public event Action<string> AnswerChanged;
+        private TaskData _data;
+
         public string TaskId { get; set; }
         private bool _isUpdating = false;
 
-        private TaskData _data;
 
         public string ParticipantAnswer { get; set; }
 
@@ -50,6 +54,7 @@ namespace KEGE_Participants.User_Controls
 
             SetImage(_data.Image);
             SetupTaskLayout();
+            SetFilesToPanel();
         }
 
         public string GetAnswer()
@@ -275,7 +280,7 @@ namespace KEGE_Participants.User_Controls
             UIElementFactory borderFactory = new BorderFactory();
             UIElementFactory textBlockFactory = new TextBlockFactory();
             UIElementFactory textBoxFactory = new TextBoxFactory();
-            
+
             for (int i = 0; i < rowCount; i++)
             {
                 // Высота строки
@@ -311,6 +316,95 @@ namespace KEGE_Participants.User_Controls
                     Grid.SetColumn(cellBorder, j);
                     Answer_Table_Grid.Children.Add(cellBorder);
                 }
+            }
+        }
+
+        private void SetFilesToPanel()
+        {
+            var files = _data.Files;
+
+            if (files is null || files.Count == 0)
+            {
+                _FilesPanel.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            _FilesPanel.Visibility = Visibility.Visible;
+            _FilesContainer.Children.Clear();
+
+
+            UIElementFactory imageFactory = new ImageFactory();
+            UIElementFactory textBlockFactory = new TextBlockFactory();
+            UIElementFactory borderFactory = new BorderFactory();
+
+            foreach (var file in files)
+            {
+                // Рамка файла
+                var rowBorder = (CustomBorder)borderFactory.FactoryMethod();
+                rowBorder.BorderThickness = new Thickness(0);
+                rowBorder.BorderBrush = Brushes.Transparent;
+                rowBorder.Margin = new Thickness(10, 5, 10, 5);
+                rowBorder.Cursor = Cursors.Hand;
+                rowBorder.Tag = file;
+
+                var panel = new StackPanel();
+
+                var icon = (CustomImage)imageFactory.FactoryMethod();
+
+                string extension = Path.GetExtension(file.FileName).ToLower();
+                string iconPath = GetIconPath(extension);
+
+                icon.Source = new BitmapImage(new Uri(iconPath,
+                    UriKind.RelativeOrAbsolute));
+                icon.HorizontalAlignment = HorizontalAlignment.Center;
+                icon.VerticalAlignment = VerticalAlignment.Center;
+
+
+                var textBlock = (CustomTextBlock)textBlockFactory.FactoryMethod();
+                //textBlock.Text = file.FileName;
+                textBlock.FontSize = 22;
+                textBlock.FontWeight = FontWeights.SemiBold;
+                textBlock.Margin = new Thickness(0, 10, 0, 0);
+                textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                textBlock.VerticalAlignment = VerticalAlignment.Center;
+                textBlock.FontFamily = new FontFamily("/Resources/Fonts/#Inter");
+                textBlock.Foreground = (Brush)new BrushConverter().ConvertFrom("#000000");
+
+                var run = new Run(file.FileName);
+                var hyperlink = new Hyperlink(run)
+                {
+                    TextDecorations = null,
+                    Foreground = (Brush)new BrushConverter().ConvertFrom("#2d6dfe") // Синий цвет ссылки
+                };
+
+                hyperlink.Tag = file;
+                hyperlink.Click += Hyperlink_Click;
+
+                textBlock.Inlines.Add(hyperlink);
+
+                panel.Children.Add(icon);
+                panel.Children.Add(textBlock);
+                rowBorder.Child = panel;
+
+                _FilesContainer.Children.Add(rowBorder);
+            }
+        }
+
+        private string GetIconPath(string extension)
+        {
+            switch (extension)
+            {
+                case ".txt": return "/Resources/Extensions/txt96x96.png";
+
+                case ".doc":
+                case ".docx": return "/Resources/Extensions/word96x96.png";
+
+                case ".xls":
+                case ".xlsx": return "/Resources/Extensions/exel96x96.png";
+
+                case ".ods": return "/Resources/Extensions/ods96x96.png";
+
+                default: return "/Resources/Extensions/unknownFile96xx96.png";
             }
         }
 
@@ -369,6 +463,42 @@ namespace KEGE_Participants.User_Controls
             _isUpdating = false;
             // После массовой вставки уведомляем о изменениях один раз
             AnswerChanged?.Invoke(TaskId);
+        }
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = (Hyperlink)sender;
+            var fileData = (FileData)hyperlink.Tag;
+
+            if (fileData?.Data == null || fileData.Data.Length == 0)
+            {
+                MessageBox.Show("Файл пуст или данные не загружены", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                string tempFolder = Path.Combine(Path.GetTempPath(), "EgeClient_Temp");
+                if (!Directory.Exists(tempFolder)) Directory.CreateDirectory(tempFolder);
+
+                string filePath = Path.Combine(tempFolder, fileData.FileName);
+
+                // Сохраняем байты во временный файл
+                File.WriteAllBytes(filePath, fileData.Data);
+
+                // Открываем файл системным приложением
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Не удалось открыть файл: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }

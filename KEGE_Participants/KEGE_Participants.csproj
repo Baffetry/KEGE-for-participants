@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Extensions\exel96x96.png" />
+    <None Remove="Resources\Extensions\ods96x96.png" />
+    <None Remove="Resources\Extensions\txt96x96.png" />
+    <None Remove="Resources\Extensions\unknownFile96xx96.png" />
+    <None Remove="Resources\Extensions\word96x96.png" />
     <None Remove="Resources\Icons\buttonClose96x96.png" />
     <None Remove="Resources\Icons\edusite_blue_logo.png" />
     <None Remove="Resources\Icons\home96x96.png" />
@@ -17,6 +22,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Extensions\txt96x96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Extensions\exel96x96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Extensions\ods96x96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Extensions\unknownFile96xx96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Extensions\word96x96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Icons\buttonClose96x96.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

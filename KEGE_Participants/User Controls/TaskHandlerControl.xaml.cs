@@ -103,12 +103,10 @@ namespace KEGE_Participants.User_Controls
 
                 taskView.AnswerChanged += (id) => {
                     if (_taskButtons.ContainsKey(id))
-                    {
                         _taskButtons[id].Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
-                    }
                 };
 
-                _panels[content] = /*new TaskViewControl(option.TaskList[i]);*/ taskView;
+                _panels[content] = taskView;
                 _TaskHandlerGrid.Children.Add(btn);
             }
         }
