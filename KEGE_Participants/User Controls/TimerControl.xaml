@@ -10,12 +10,12 @@
         Background="#FFFFFF" CornerRadius="10" 
         BorderBrush="#000" BorderThickness="3"
         Padding="15,5" HorizontalAlignment="Right" 
-        Margin="20" Height="120" Width="340"
+        Margin="5" Height="70" Width="200"
         >
 
         <TextBlock 
             x:Name="Timer_TextBlock" 
-            FontSize="38" 
+            FontSize="34" 
             FontWeight="Bold" 
             Foreground="#000"
             VerticalAlignment="Center"

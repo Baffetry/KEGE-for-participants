@@ -1,11 +1,11 @@
-﻿using Exceptions;
+﻿using System.IO;
+using Exceptions;
 using KEGE_Station;
-using Microsoft.Win32;
-using System.IO;
-using System.Text.Json;
-using System.Windows;
-using System.Windows.Controls;
 using Testing_Option;
+using System.Windows;
+using System.Text.Json;
+using System.Windows.Controls;
+using KEGE_Participants.Windows;
 
 namespace KEGE_Participants.User_Controls
 {
@@ -31,6 +31,8 @@ namespace KEGE_Participants.User_Controls
         {
             // Green
             ButtonBehavior.Apply(_StartAttempt_btn);
+            ButtonBehavior.Apply(Settings_btn);
+            ButtonBehavior.Apply(Home_btn);
 
             // Red
             ButtonBehavior.Apply(_Close_btn, true);
@@ -45,9 +47,9 @@ namespace KEGE_Participants.User_Controls
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FirstName)) throw new EmptyLogInExcaption("Вы не ввели имя");
-                if (string.IsNullOrWhiteSpace(SecondName)) throw new EmptyLogInExcaption("Вы не ввели фамилию");
-                if (string.IsNullOrWhiteSpace(MiddleName)) throw new EmptyLogInExcaption("Вы не ввели отчество");
+                if (string.IsNullOrWhiteSpace(SecondName)) throw new EmptyLogInExcaption("Введите фамилию.");
+                if (string.IsNullOrWhiteSpace(FirstName)) throw new EmptyLogInExcaption("Введите имя.");
+                if (string.IsNullOrWhiteSpace(MiddleName)) throw new EmptyLogInExcaption("Введите отчество.");
 
 
                 var resultCollector = ResultCollector.Instance;
@@ -70,12 +72,20 @@ namespace KEGE_Participants.User_Controls
             }
             catch (EmptyLogInExcaption ex)
             {
-                MessageBox.Show(ex.Message);
+                NotificationWindow.QuickShow(
+                    "Неверные данные участника.", 
+                    ex.Message, 
+                    NotificationType.Warning
+                    );
                 return;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Неверный путь к файлу");
+                NotificationWindow.QuickShow(
+                    "Ошибка конфигурации.", 
+                    "Проверьте путь к файлу в настройках", 
+                    NotificationType.Error
+                    );
                 return;
             }
         }

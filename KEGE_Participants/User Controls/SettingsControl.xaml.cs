@@ -1,9 +1,11 @@
-﻿using Microsoft.Win32;
-using System.IO;
-using System.Text.RegularExpressions;
+﻿using System.IO;
+using KEGE_Station;
 using System.Windows;
-using System.Windows.Controls;
+using Microsoft.Win32;
 using System.Windows.Input;
+using System.Windows.Controls;
+using KEGE_Participants.Windows;
+using System.Text.RegularExpressions;
 
 namespace KEGE_Participants.User_Controls
 {
@@ -15,12 +17,20 @@ namespace KEGE_Participants.User_Controls
         public SettingsControl()
         {
             InitializeComponent();
+            SetButtonsBehavior();
             LoadCurrentSettings();
+        }
+
+        private void SetButtonsBehavior()
+        {
+            ButtonBehavior.Apply(BrowseLoad_btn);
+            ButtonBehavior.Apply(BrowseSave_btn);
+            ButtonBehavior.Apply(SaveAllSettings_btn);
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            // Регулярное выражение: разрешаем только символы от 0 до 9
+            // Символы от 0 до 9
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
@@ -56,7 +66,6 @@ namespace KEGE_Participants.User_Controls
         {
             Setting_LoadPath.Text = App.GetResourceString("ConfigurationPath");
             Setting_SavePath.Text = App.GetResourceString("SavedPath");
-
             Setting_Hours.Text = App.GetResourceString("TimeLimit_hours");
             Setting_Minutes.Text = App.GetResourceString("TimeLimit_minutes");
             Setting_Seconds.Text = App.GetResourceString("TimeLimit_seconds");
@@ -97,11 +106,11 @@ namespace KEGE_Participants.User_Controls
                 App.SetResourceString("TimeLimit_minutes", Setting_Minutes.Text);
                 App.SetResourceString("TimeLimit_seconds", Setting_Seconds.Text);
 
-                MessageBox.Show("Настройки успешно сохранены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                NotificationWindow.QuickShow("Настройки конфигурации", "Настройки успешно сохранены", NotificationType.Success);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                NotificationWindow.QuickShow("Настройки конфигурации", ex.Message, NotificationType.Error);
             }
         }
     }

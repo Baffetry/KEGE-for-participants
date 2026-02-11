@@ -1,0 +1,221 @@
+﻿<Window x:Class="KEGE_Participants.Windows.NotificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KEGE_Participants.Windows"
+        mc:Ignorable="d"
+        Title="Notification"
+        Width="500"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        >
+    <Window.Resources>
+
+        <ControlTemplate x:Key="NoMouseOverButtonTemplate" TargetType="Button">
+            <Border 
+                x:Name="InnerBorder"
+                Background="#ffffff"  
+                BorderBrush="#000000"  
+                BorderThickness="3"
+                CornerRadius="15"
+                >
+                <ContentPresenter HorizontalAlignment="Center"  
+                       VerticalAlignment="Center" />
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{x:Static SystemColors.ControlLightBrush}" />
+                    <Setter Property="Foreground" Value="{x:Static SystemColors.GrayTextBrush}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Border CornerRadius="6" Background="#ededed" BorderBrush="#000000" BorderThickness="1" Margin="6 0 0 0">
+                            <Grid>
+                                <Track x:Name="PART_Track" IsDirectionReversed="true">
+                                    <Track.Thumb>
+                                        <Thumb>
+                                            <Thumb.Template>
+                                                <ControlTemplate TargetType="Thumb">
+                                                    <Border CornerRadius="4" Background="#4dd49e" 
+                                     Margin="1" BorderBrush="#000000" BorderThickness="1"/>
+                                                </ControlTemplate>
+                                            </Thumb.Template>
+                                        </Thumb>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Border
+        Background="#fff"
+        BorderBrush="#000"
+        BorderThickness="3"
+        CornerRadius="20"
+        MouseLeftButtonDown="Border_MouseLeftButtonDown"
+        >
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Border 
+                x:Name="_NotificationType"
+                Grid.Row="0" 
+                Background="#F0F0F0" 
+                CornerRadius="17 17 0 0" 
+                Margin="0 0 0 0"
+                BorderBrush="#000"
+                BorderThickness="0 0 0 3"
+                >
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="10 0 0 0">
+
+                        <Image 
+                            x:Name="_Icon" 
+                            Height="60" 
+                            Margin="10 5" 
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            d:Source="/Resources/Icons/error96x96.png"
+                            Source="{Binding IconSource}"/>
+
+                        <TextBlock
+                            x:Name="_Title"
+                            d:Text="Error"
+                            Text="{Binding TitleText}"
+                            FontSize="34"
+                            FontWeight="SemiBold"
+                            FontFamily="/Resources/Fonts/#Inter"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            TextAlignment="Center"
+                            Margin="10, 5"
+                            />
+
+                    </StackPanel>
+
+                    <Button 
+                        x:Name="_Close_btn" 
+                        Width="50" 
+                        Height="50" 
+                        Margin="0 0 15 0" 
+                        DockPanel.Dock="Right" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Center"
+                        Click="_Close_btn_Click" 
+                        Template="{StaticResource NoMouseOverButtonTemplate}"
+                        >
+                        <Image 
+                            Source="/Resources/Icons/buttonClose96x96.png" 
+                            Height="35" 
+                            Width="35"/>
+                    </Button>
+
+                </DockPanel>
+            </Border>
+
+            <TextBlock
+                Grid.Row="1"
+                x:Name="_MessageTitle"
+                d:Text="Message Title"
+                Text="{Binding MessageTitleText}"
+                FontSize="24"
+                FontWeight="Regular"
+                FontFamily="/Resources/Fonts/#Inter"
+                TextWrapping="Wrap"
+                Margin="10 10 10 10"
+                />
+
+            <ScrollViewer
+                Grid.Row="2"
+                MaxHeight="300"
+                Margin="10"
+                VerticalScrollBarVisibility="Auto"
+                >
+
+                <TextBlock
+                    Grid.Row="2"
+                    x:Name="_Message"
+                    d:Text="Some message"
+                    Text="{Binding MessageText}"
+                    FontSize="24"
+                    FontWeight="Regular"
+                    FontFamily="/Resources/Fonts/#Inter"
+                    TextWrapping="Wrap"
+                    />
+
+            </ScrollViewer>
+
+            <StackPanel 
+                x:Name="_YesNoPanel"
+                Visibility="Visible"
+                Grid.Row="3"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                >
+
+                <Button 
+                    x:Name="Yes_btn" 
+                    Width="80" 
+                    Height="60" 
+                    Margin="10 10 2 10" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center"
+                    Click="Yes_btn_Click" 
+                    Template="{StaticResource NoMouseOverButtonTemplate}"
+                    >
+                    <TextBlock
+                        Text="Yes"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        FontFamily="/Resources/Fonts/#Inter"
+                        />
+                </Button>
+
+                <Button 
+                    x:Name="No_btn" 
+                    Width="80" 
+                    Height="60" 
+                    Margin="2 10 10 10" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center"
+                    Click="No_btn_Click" 
+                    Template="{StaticResource NoMouseOverButtonTemplate}"
+                    >
+                    <TextBlock
+                        Text="No"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        FontFamily="/Resources/Fonts/#Inter"
+                        />
+                </Button>
+
+
+            </StackPanel>
+            
+        </Grid>
+    </Border>
+    
+</Window>

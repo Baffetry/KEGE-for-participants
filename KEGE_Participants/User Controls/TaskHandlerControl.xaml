@@ -36,7 +36,7 @@
                             Background="#ededed" 
                             BorderBrush="#000000" 
                             BorderThickness="1"
-                            Margin="2"
+                            Margin="1"
                             >
                             <Grid>
                                 <Track x:Name="PART_Track" IsDirectionReversed="true">
@@ -70,10 +70,10 @@
         BorderBrush="#000"
         BorderThickness="3"
         CornerRadius="15"
-        Width="340"
+        Width="200"
         HorizontalAlignment="Center" 
         VerticalAlignment="Top"
-        Padding="5"
+        Padding="2"
         MaxHeight="500"
         >
 
@@ -83,7 +83,8 @@
             Margin="5"
             >
             <Grid 
-                x:Name="_TaskHandlerGrid" Margin="0 5"
+                HorizontalAlignment="Center"
+                x:Name="_TaskHandlerGrid" Margin="0 5 5 5"
                 >
             </Grid>
             

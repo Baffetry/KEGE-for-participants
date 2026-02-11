@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:KEGE_Participants.User_Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="410"
+             d:DesignHeight="1080" d:DesignWidth="240"
              >
     <UserControl.Resources>
 
@@ -33,6 +33,7 @@
         x:Name="_Border"
         Background="#2d6dfe"
         BorderBrush="#000"
+        Width="240"
         BorderThickness="0 0 3 0"
         ClipToBounds="True"
         >
@@ -45,8 +46,8 @@
             </Grid.RowDefinitions>
 
             <Button
-                x:Name="_Close_btn"
-                Height="70" Width="70" Margin="30"
+                x:Name="_Close_btn" Visibility="Visible"
+                Height="70" Width="70" Margin="20 30"
                 HorizontalAlignment="Left" BorderBrush="#000"
                 BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"
@@ -59,25 +60,23 @@
 
             </Button>
 
-            <local:TimerControl 
+            <local:TimerControl
+                Margin="0 130 0 10"
                 x:Name="_Timer" Grid.Row="1"
-                Margin="0 50 0 0"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                
                 />
 
             <local:TaskHandlerControl
                 x:Name="_TaskHandler"
-                Margin="0 0 0 20"
+                Margin="5"
                 Grid.Row="2"
-                Width="340"
                 HorizontalAlignment="Center"
                 />
 
             <Button
+                Margin="10 50"
                 x:Name="_EndAttempt_btn" Grid.Row="3"
-                Content="Завершить попытку" Height="80" Width="340"
+                Content="Завершить" Height="70" Width="200"
                 FontFamily="/Resources/Fonts/#Inter" FontSize="30" FontWeight="SemiBold"
                 BorderBrush="#000" BorderThickness="3" Background="#fff"
                 Template="{StaticResource NoMouseOverButtonTemplate}"

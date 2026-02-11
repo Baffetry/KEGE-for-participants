@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using Testing_Option;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
-using Testing_Option;
+using System.Windows.Controls;
+using KEGE_Participants.Models.Custom_brushes;
 
 namespace KEGE_Participants.User_Controls
 {
@@ -15,7 +15,7 @@ namespace KEGE_Participants.User_Controls
         private Dictionary<string, Button> _taskButtons;
         private Dictionary<string, TaskViewControl> _panels;
 
-        private const int COLUMNS = 4;
+        private const int COLUMNS = 2;
         private int count = 27;
         public TaskHandlerControl()
         {
@@ -77,6 +77,7 @@ namespace KEGE_Participants.User_Controls
             Grid.SetColumn(infBtn, 0);
             _TaskHandlerGrid.Children.Add(infBtn);
             _taskButtons["i"] = infBtn;
+
             // Задания
             for (int i = 0; i < count; i++)
             {
@@ -98,12 +99,12 @@ namespace KEGE_Participants.User_Controls
                 taskView.AnswerSaved += (id) =>
                 {
                     if (_taskButtons.ContainsKey(id))
-                        _taskButtons[id].Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
+                        _taskButtons[id].Background = CustomBrusher.Blue;;
                 };
 
                 taskView.AnswerChanged += (id) => {
                     if (_taskButtons.ContainsKey(id))
-                        _taskButtons[id].Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
+                        _taskButtons[id].Background = CustomBrusher.White;
                 };
 
                 _panels[content] = taskView;
@@ -122,8 +123,8 @@ namespace KEGE_Participants.User_Controls
                 Width = 65,
 
                 // Свойства шаблона
-                Background = Brushes.White,
-                BorderBrush = Brushes.Black,
+                Background = CustomBrusher.White,
+                BorderBrush = CustomBrusher.Black,
                 BorderThickness = new Thickness(3),
 
                 // Совйства текста
@@ -145,7 +146,7 @@ namespace KEGE_Participants.User_Controls
         private void TaskBtn_MouseEnter(object sender, MouseEventArgs e)
         {
             if (sender is Button btn)
-                btn.Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
+                btn.Background = CustomBrusher.Blue;
         }
 
         private void TaskBtn_MouseLeave(object sender, MouseEventArgs e)
@@ -155,9 +156,9 @@ namespace KEGE_Participants.User_Controls
                 string content = btn.Content.ToString();
 
                 if (_panels.ContainsKey(content) && !string.IsNullOrWhiteSpace(_panels[content].ParticipantAnswer))
-                    btn.Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
+                    btn.Background = CustomBrusher.Blue;
                 else
-                    btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
+                    btn.Background = CustomBrusher.White;
             }
         }
 
@@ -176,7 +177,7 @@ namespace KEGE_Participants.User_Controls
             }
             else
             {
-                string taskNumber = btn.Content.ToString();
+                string taskNumber = btn?.Content.ToString();
                 PageFacade.Instance.SetContent(_panels[taskNumber]);
             }
         }

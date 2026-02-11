@@ -1,14 +1,17 @@
-﻿using KEGE_Participants.Models.Factory.UIElements;
-using KEGE_Participants.Models.Factory.UIElements_factories;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
+using Task_Data;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Task_Data;
+using KEGE_Participants.Windows;
+using KEGE_Participants.Models.Factory;
+using KEGE_Participants.Models.Image_halper;
+using KEGE_Participants.Models.File_manager;
+using KEGE_Participants.Models.FileUI_halper;
+using KEGE_Participants.Models.Table_manager;
+using KEGE_Participants.Models.Custom_brushes;
+
 
 namespace KEGE_Participants.User_Controls
 {
@@ -20,186 +23,117 @@ namespace KEGE_Participants.User_Controls
         public event Action<string> AnswerSaved;
         public event Action<string> AnswerChanged;
 
+        private readonly TableManager _tableManager;
+        private readonly FileManager _fileManager = new();
         private readonly List<(string taskNumber, int rowCount)> _tableConfigs = new List<(string taskNumber, int rowCount)>()
         {
-            ("17", 1),
-            ("18", 1),
-            ("20", 1),
-            ("25", 10),
-            ("26", 1),
-            ("27", 2)
+            ("17", 1), ("18", 1), ("20", 1), ("25", 10), ("26", 1), ("27", 2)
         };
 
         private TaskData _data;
 
         public string TaskId { get; set; }
         private bool _isUpdating = false;
-
-
         public string ParticipantAnswer { get; set; }
 
         public TaskViewControl(TaskData data)
         {
             InitializeComponent();
             _data = data;
-
-            _TaskNumber_Box.Text = $"Задание {_data.TaskNumber}";
-
-            string content = $"{_data.TaskWeight}";
-            _TaskWeight_Box.Text = _data.TaskWeight == 1
-                ? content + " балл"
-                : content + " балла";
-
             TaskId = _data.TaskNumber;
+            _tableManager = new TableManager(Answer_Table_Grid);
 
-            SetImage(_data.Image);
+            InitializeUI();
+        }
+        private void InitializeUI()
+        {
+            _TaskNumber_Box.Text = $"Задание {_data.TaskNumber}";
+            _TaskWeight_Box.Text = _data.TaskWeight == 1 
+                ? "1 балл" 
+                : $"{_data.TaskWeight} балла";
+
+            TaskImage.Source = ImageHalper.LoadImage(_data.Image);
+
             SetupTaskLayout();
             SetFilesToPanel();
         }
 
+        #region Answer logic
+
         public string GetAnswer()
         {
             if (Bottom_Answer_Border.Visibility == Visibility.Visible)
-            {
                 return string.IsNullOrWhiteSpace(Answer_TextBox.Text)
                     ? "%noAnswer%"
                     : Answer_TextBox.Text.Trim();
-            }
 
-            var allCells = new List<string>();
-            var lastFilledIndex = -1;
-
-            for (int row = 0; row < Answer_Table_Grid.RowDefinitions.Count; row++)
-            {
-                for (int col = 1; col <= 2; col++)
-                {
-                    var cellBorder = Answer_Table_Grid.Children
-                        .OfType<Border>()
-                        .FirstOrDefault(
-                            idx => Grid.GetRow(idx) == row &&
-                            Grid.GetColumn(idx) == col
-                        );
-
-                    if (cellBorder?.Child is TextBox tb)
-                    {
-                        string text = tb.Text?.Trim();
-                        bool isEmpty = string.IsNullOrWhiteSpace(text);
-
-                        allCells.Add(isEmpty ? "%noAnswer%" : text);
-
-                        if (!isEmpty)
-                            lastFilledIndex = allCells.Count - 1;
-                    }
-                }
-            }
-
-            if (lastFilledIndex == -1) return "%noAnswer%";
-
-            return string.Join(" ", allCells);
-        }
-
-        public void SetImage(byte[] imageBytes)
-        {
-            if (imageBytes is null || imageBytes.Length == 0) return;
-
-            try
-            {
-                var bitmap = new BitmapImage();
-
-                using (var ms = new MemoryStream(imageBytes))
-                {
-                    bitmap.BeginInit();
-                    bitmap.StreamSource = ms;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.EndInit();
-                }
-
-                bitmap.Freeze();
-                TaskImage.Source = bitmap;
-
-                RenderOptions.SetBitmapScalingMode(TaskImage, BitmapScalingMode.HighQuality);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка загрузки изображения");
-                return;
-            }
+            var answers = _tableManager.ExtractAnswers();
+            return answers.Count == 0
+                ? "%noAnswer%"
+                : string.Join(" ", answers);
         }
 
         public void ResetUnsavedChanges()
         {
             _isUpdating = true;
+            ClearVisualStates();
 
             if (string.IsNullOrEmpty(ParticipantAnswer))
             {
-                Save_btn.Background = Brushes.White;
-                TableSave_btn.Background = Brushes.White;
-                // Очищаем поля, если ответа нет
                 Answer_TextBox.Text = string.Empty;
+                _isUpdating = false;
                 return;
             }
 
-            bool hasAnswer = !string.IsNullOrWhiteSpace(ParticipantAnswer);
-            Brush activeColor = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
-            Brush idleColor = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
-
-            // 1. Восстанавливаем обычное поле
             Answer_TextBox.Text = ParticipantAnswer;
 
-            // 2. Восстанавливаем таблицу, если она активна
             if (Table_Answer_Border.Visibility == Visibility.Visible)
             {
-                RestoreTableAnswers();
-                Save_btn.Background = hasAnswer ? activeColor : idleColor;
+                _tableManager.RestoreTable(ParticipantAnswer);
+                SetButtonActive(Save_btn);
             }
             else
             {
-                TableSave_btn.Background = hasAnswer ? activeColor : idleColor;
+                SetButtonActive(TableSave_btn);
             }
 
             _isUpdating = false;
         }
 
-        private void RestoreTableAnswers()
-        {
-            if (string.IsNullOrWhiteSpace(ParticipantAnswer)) return;
-
-            // Разбиваем строку ответов (в КЕГЭ они обычно через пробел)
-            string[] parts = ParticipantAnswer.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            int partIndex = 0;
-
-            for (int i = 0; i < Answer_Table_Grid.RowDefinitions.Count; i++)
-            {
-                for (int j = 1; j <= 2; j++) // Колонки с вводом
-                {
-                    if (partIndex >= parts.Length) return;
-
-                    var cell = Answer_Table_Grid.Children
-                        .OfType<Border>()
-                        .FirstOrDefault(b => Grid.GetRow(b) == i && Grid.GetColumn(b) == j);
-
-                    if (cell?.Child is TextBox tb)
-                    {
-                        tb.Text = parts[partIndex++];
-                    }
-                }
-            }
-        }
-
         private void Answer_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string color = new BrushConverter().ConvertFrom("#66D9FF").ToString();
-
-            bool flag = Save_btn.Background.ToString() != color && TableSave_btn.Background.ToString() != color;
-
-            if (_isUpdating && flag) return;
+            if (_isUpdating) return;
 
             ParticipantAnswer = string.Empty;
-            Save_btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
-            TableSave_btn.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFFF");
+            ClearVisualStates();
             AnswerChanged?.Invoke(TaskId);
         }
 
+        private void Save_btn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(Answer_TextBox.Text))
+            {
+                ParticipantAnswer = Answer_TextBox.Text;
+                SetButtonActive(Save_btn);
+                AnswerSaved?.Invoke(TaskId);
+            }
+        }
+        
+        private void TableSave_btn_Click(object sender, RoutedEventArgs e)
+        {
+            var answers = _tableManager.ExtractAnswers();
+
+            if (answers.Any())
+            {
+                ParticipantAnswer = string.Join(" ", answers);
+                SetButtonActive(TableSave_btn);
+                AnswerSaved?.Invoke(TaskId);
+            }
+        }
+
+        #endregion
+
+        #region Layout ans table generation
         private void SetupTaskLayout()
         {
             var cfg = _tableConfigs.FirstOrDefault(x => x.taskNumber.Equals(TaskId));
@@ -219,49 +153,6 @@ namespace KEGE_Participants.User_Controls
             }
         }
 
-        private void Save_btn_Click(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(Answer_TextBox.Text))
-            {
-                ParticipantAnswer = Answer_TextBox.Text;
-                Save_btn.Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
-                AnswerSaved?.Invoke(TaskId);
-            }
-        }
-
-        private void TableSave_btn_Click(object sender, RoutedEventArgs e)
-        {
-            var resultList = new List<string>();
-
-            for (int i = 0; i < Answer_Table_Grid.RowDefinitions.Count; i++)
-            {
-                for (int j = 1; j <= 2; j++)
-                {
-                    // Ищем Border в ячейке, затем TextBox внутри него
-                    var cellBorder = Answer_Table_Grid.Children
-                        .OfType<Border>()
-                        .FirstOrDefault(b => Grid.GetRow(b) == i && Grid.GetColumn(b) == j);
-
-                    if (cellBorder?.Child is TextBox tb && !string.IsNullOrWhiteSpace(tb.Text))
-                    {
-                        resultList.Add(tb.Text.Trim());
-                    }
-                }
-            }
-
-            if (resultList.Count > 0)
-            {
-                var temp = string.Join(" ", resultList);
-
-                if (!string.IsNullOrEmpty(temp))
-                {
-                    ParticipantAnswer = temp;
-                    TableSave_btn.Background = (Brush)new BrushConverter().ConvertFrom("#66D9FF");
-                    AnswerSaved?.Invoke(TaskId);
-                }
-            }
-        }
-
         private void GenerateTable(int rowCount)
         {
             // Очищаем старые данные
@@ -269,61 +160,34 @@ namespace KEGE_Participants.User_Controls
             Answer_Table_Grid.RowDefinitions.Clear();
             Answer_Table_Grid.ColumnDefinitions.Clear();
 
-            // 1. Создаем колонки
-            // Колонка 0: Номер строки
+            // Усталавливаем размеры колон
             Answer_Table_Grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(55) });
-            // Колонки 1 и 2: Поля ввода
             Answer_Table_Grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
             Answer_Table_Grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
 
-            // 2. Генерируем строки
-            UIElementFactory borderFactory = new BorderFactory();
-            UIElementFactory textBlockFactory = new TextBlockFactory();
-            UIElementFactory textBoxFactory = new TextBoxFactory();
+            var factory = new TableUIFactory(Answer_TextBox_TextChanged, Table_TextBox_PreviewKeyDown);
 
-            for (int i = 0; i < rowCount; i++)
+            for (int row = 0; row < rowCount; row++)
             {
-                // Высота строки
                 Answer_Table_Grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(40) });
 
-                for (int j = 0; j < 3; j++)
+                for (int col = 0; col < 3; col++)
                 {
-                    // Создаем рамку для каждой ячейки
-                    var cellBorder = (Border)borderFactory.FactoryMethod();
-                    cellBorder.BorderBrush = (Brush)new BrushConverter().ConvertFrom("#A0A0A0");
-                    cellBorder.BorderThickness = new Thickness(0, 0, (j < 2 ? 1 : 0), (i < rowCount - 1 ? 1 : 0));
-
-                    if (j == 0)
-                    {
-                        // Ячейка с номером
-                        var textBlock = (TextBlock)textBlockFactory.FactoryMethod();
-                        textBlock.Text = (i + 1).ToString();
-
-                        cellBorder.Child = textBlock;
-                        cellBorder.Background = (Brush)new BrushConverter().ConvertFrom("#E0E0E0");
-                    }
-                    else
-                    {
-                        // Ячейка с вводом текста
-                        var textBox = (TextBox)textBoxFactory.FactoryMethod();
-                        textBox.TextChanged += Answer_TextBox_TextChanged;
-                        textBox.PreviewKeyDown += Table_TextBox_PreviewKeyDown;
-                        cellBorder.Child = textBox;
-                    }
-
-                    // Устанавливаем позицию в Grid
-                    Grid.SetRow(cellBorder, i);
-                    Grid.SetColumn(cellBorder, j);
-                    Answer_Table_Grid.Children.Add(cellBorder);
+                    var cell = factory.CreateCell(row, col, rowCount);
+                    Grid.SetRow(cell, row);
+                    Grid.SetColumn(cell, col);
+                    Answer_Table_Grid.Children.Add(cell);
                 }
-            }
+            }   
         }
+
+        #endregion
+
+        #region File management
 
         private void SetFilesToPanel()
         {
-            var files = _data.Files;
-
-            if (files is null || files.Count == 0)
+            if (_data.Files is null || !_data.Files.Any())
             {
                 _FilesPanel.Visibility = Visibility.Collapsed;
                 return;
@@ -332,173 +196,72 @@ namespace KEGE_Participants.User_Controls
             _FilesPanel.Visibility = Visibility.Visible;
             _FilesContainer.Children.Clear();
 
-
-            UIElementFactory imageFactory = new ImageFactory();
-            UIElementFactory textBlockFactory = new TextBlockFactory();
-            UIElementFactory borderFactory = new BorderFactory();
-
-            foreach (var file in files)
+            foreach (var file in _data.Files)
             {
-                // Рамка файла
-                var rowBorder = (CustomBorder)borderFactory.FactoryMethod();
-                rowBorder.BorderThickness = new Thickness(0);
-                rowBorder.BorderBrush = Brushes.Transparent;
-                rowBorder.Margin = new Thickness(10, 5, 10, 5);
-                rowBorder.Cursor = Cursors.Hand;
-                rowBorder.Tag = file;
+                var fileControl = FileUIHalper.CreateFileControl(
+                    file,
+                    _fileManager.GetIconPath(Path.GetExtension(file.FileName)),
+                    Hyperlink_Click
+                    );
 
-                var panel = new StackPanel();
-
-                var icon = (CustomImage)imageFactory.FactoryMethod();
-
-                string extension = Path.GetExtension(file.FileName).ToLower();
-                string iconPath = GetIconPath(extension);
-
-                icon.Source = new BitmapImage(new Uri(iconPath,
-                    UriKind.RelativeOrAbsolute));
-                icon.HorizontalAlignment = HorizontalAlignment.Center;
-                icon.VerticalAlignment = VerticalAlignment.Center;
-
-
-                var textBlock = (CustomTextBlock)textBlockFactory.FactoryMethod();
-                //textBlock.Text = file.FileName;
-                textBlock.FontSize = 22;
-                textBlock.FontWeight = FontWeights.SemiBold;
-                textBlock.Margin = new Thickness(0, 10, 0, 0);
-                textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-                textBlock.VerticalAlignment = VerticalAlignment.Center;
-                textBlock.FontFamily = new FontFamily("/Resources/Fonts/#Inter");
-                textBlock.Foreground = (Brush)new BrushConverter().ConvertFrom("#000000");
-
-                var run = new Run(file.FileName);
-                var hyperlink = new Hyperlink(run)
-                {
-                    TextDecorations = null,
-                    Foreground = (Brush)new BrushConverter().ConvertFrom("#2d6dfe") // Синий цвет ссылки
-                };
-
-                hyperlink.Tag = file;
-                hyperlink.Click += Hyperlink_Click;
-
-                textBlock.Inlines.Add(hyperlink);
-
-                panel.Children.Add(icon);
-                panel.Children.Add(textBlock);
-                rowBorder.Child = panel;
-
-                _FilesContainer.Children.Add(rowBorder);
+                _FilesContainer.Children.Add(fileControl);
             }
         }
 
-        private string GetIconPath(string extension)
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            switch (extension)
+            if (sender is Hyperlink link && link.Tag is FileData file)
             {
-                case ".txt": return "/Resources/Extensions/txt96x96.png";
-
-                case ".doc":
-                case ".docx": return "/Resources/Extensions/word96x96.png";
-
-                case ".xls":
-                case ".xlsx": return "/Resources/Extensions/exel96x96.png";
-
-                case ".ods": return "/Resources/Extensions/ods96x96.png";
-
-                default: return "/Resources/Extensions/unknownFile96xx96.png";
+                try { _fileManager.OpenFile(file); }
+                catch (Exception ex)
+                {
+                    NotificationWindow.QuickShow(
+                        "Обработка файла",
+                        "Не удалось открыть файл",
+                        NotificationType.Error
+                        );
+                }
             }
         }
 
+        #endregion
+
+        #region Utilities
         private void Table_TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 e.Handled = true; // Отменяем стандартную вставку
 
-                string clipboardText = Clipboard.GetText();
-                if (string.IsNullOrWhiteSpace(clipboardText)) return;
+                string text = Clipboard.GetText();
+                if (string.IsNullOrWhiteSpace(text)) return;
 
-                // Разбиваем текст по пробелам, табуляциям и переносам строк
-                string[] parts = clipboardText.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = text.Split(new[] { ' ', '\t', '\n', '\r' },
+                    StringSplitOptions.RemoveEmptyEntries);
 
-                if (parts.Length == 0) return;
+                var border = (sender as TextBox)?.Parent as Border;
 
-                var currentTextBox = sender as TextBox;
-                var currentBorder = currentTextBox?.Parent as Border;
-                if (currentBorder == null) return;
-
-                int startRow = Grid.GetRow(currentBorder);
-                int startCol = Grid.GetColumn(currentBorder);
-
-                FillTableFromPosition(parts, startRow, startCol);
-            }
-        }
-
-        private void FillTableFromPosition(string[] data, int row, int col)
-        {
-            _isUpdating = true; // Блокируем сброс ParticipantAnswer (флаг из прошлого шага)
-            int dataIndex = 0;
-
-            for (int i = row; i < Answer_Table_Grid.RowDefinitions.Count; i++)
-            {
-                // Начинаем с текущей колонки, если это первая итерируемая строка, иначе с колонки 1
-                int startJ = (i == row) ? col : 1;
-
-                for (int j = startJ; j <= 2; j++)
+                if (border is not null)
                 {
-                    if (dataIndex >= data.Length) break;
-
-                    // Ищем ячейку
-                    var cell = Answer_Table_Grid.Children
-                        .OfType<Border>()
-                        .FirstOrDefault(b => Grid.GetRow(b) == i && Grid.GetColumn(b) == j);
-
-                    if (cell?.Child is TextBox tb)
-                    {
-                        tb.Text = data[dataIndex++];
-                    }
+                    _isUpdating = true;
+                    _tableManager.PasteDate(parts, Grid.GetRow(border), Grid.GetColumn(border));
+                    _isUpdating = false;
+                    AnswerChanged?.Invoke(TaskId);
                 }
-                if (dataIndex >= data.Length) break;
             }
-
-            _isUpdating = false;
-            // После массовой вставки уведомляем о изменениях один раз
-            AnswerChanged?.Invoke(TaskId);
         }
 
-        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        private void ClearVisualStates()
         {
-            var hyperlink = (Hyperlink)sender;
-            var fileData = (FileData)hyperlink.Tag;
-
-            if (fileData?.Data == null || fileData.Data.Length == 0)
-            {
-                MessageBox.Show("Файл пуст или данные не загружены", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            try
-            {
-                string tempFolder = Path.Combine(Path.GetTempPath(), "EgeClient_Temp");
-                if (!Directory.Exists(tempFolder)) Directory.CreateDirectory(tempFolder);
-
-                string filePath = Path.Combine(tempFolder, fileData.FileName);
-
-                // Сохраняем байты во временный файл
-                File.WriteAllBytes(filePath, fileData.Data);
-
-                // Открываем файл системным приложением
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = filePath,
-                    UseShellExecute = true
-                });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Не удалось открыть файл: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            Save_btn.Background = CustomBrusher.White;
+            TableSave_btn.Background = CustomBrusher.White;
         }
+
+        private void SetButtonActive(Button btn)
+        {
+            btn.Background = CustomBrusher.Blue;
+        }
+
+        #endregion
     }
 }

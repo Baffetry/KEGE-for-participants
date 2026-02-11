@@ -1,6 +1,7 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using Task_Data;
+using System.Diagnostics;
+using KEGE_Participants.Windows;
 
 namespace KEGE_Participants.Models.File_manager
 {
@@ -30,8 +31,21 @@ namespace KEGE_Participants.Models.File_manager
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Ошибка при открытии файла: {ex.Message}");
+                NotificationWindow.QuickShow("Ошибка при открытии файла", ex.Message, NotificationType.Error);
             }
+        }
+
+        public string GetIconPath(string fileName)
+        {
+            string extension = Path.GetExtension(fileName).ToLower();
+
+            return extension switch
+            {
+                ".txt" => "/Resources/Extensions/txt96x96.png",
+                ".odt" or ".doc" or ".docx" => "/Resources/Extensions/word96x96.png",
+                ".ods" or ".xls" or ".xlsx" => "/Resources/Extensions/exel96x96.png",
+                _ => "/Resources/Extensions/unknownFile96xx96.png"
+            };
         }
     }
 }

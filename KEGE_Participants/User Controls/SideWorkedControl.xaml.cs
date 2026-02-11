@@ -1,8 +1,9 @@
-﻿using KEGE_Station;
-using System.IO;
-using System.Text.Json;
+﻿using System.IO;
+using KEGE_Station;
 using System.Windows;
+using System.Text.Json;
 using System.Windows.Controls;
+using KEGE_Participants.Windows;
 
 namespace KEGE_Participants.User_Controls
 {
@@ -21,8 +22,6 @@ namespace KEGE_Participants.User_Controls
 
         private void SetButtonBehavior()
         {
-            // Green
-
             // Red
             ButtonBehavior.Apply(_Close_btn, true);
             ButtonBehavior.Apply(_EndAttempt_btn, true);
@@ -30,22 +29,23 @@ namespace KEGE_Participants.User_Controls
 
         private void _Close_btn_Click(object sender, RoutedEventArgs e)
         {
-            FinishExam();
             Window.GetWindow(this).Close();
         }
 
-        public void FinishExam(bool isAuto = false)
+        public bool FinishExam(bool isAuto = false)
         {
-            // 1. Если нажал человек — спрашиваем подтверждение
+            // 1. Если нажал участник — спрашиваем подтверждение
             if (!isAuto)
             {
-                var confirm = MessageBox.Show(
+                var notification = new NotificationWindow();
+                notification.ShowNotification(
+                    "Подтверждение.",
                     "Вы уверены, что хотите завершить попытку?",
-                    "Подтверждение",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                    NotificationType.Warning,
+                    true
+                    );
 
-                if (confirm != MessageBoxResult.Yes) return;
+                if (notification.result != MessageBoxResult.Yes) return false;
             }
 
             try
@@ -65,18 +65,24 @@ namespace KEGE_Participants.User_Controls
                 string json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(filePath, json);
 
-                MessageBox.Show(
-                    "Попытка завершена. Ваши ответы успешно сохранены.",
-                    "Пробный экзамен окончен",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                NotificationWindow.QuickShow(
+                    "Попытка завершена.",
+                    "Ответы успешно сохранены.",
+                    NotificationType.Success
+                    );
 
                 PageFacade.Instance.SetContent(new MainLogoControl());
                 _facade.OpenMainMenuWithOutButton();
+                return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка при сохранении: {ex.Message}");
+                NotificationWindow.QuickShow(
+                    "Ошибка сохранения файла.",
+                    ex.Message,
+                    NotificationType.Error
+                    );
+                return false;
             }
         }
 
