@@ -90,11 +90,12 @@ namespace KEGE_Participants.User_Controls
             if (Table_Answer_Border.Visibility == Visibility.Visible)
             {
                 _tableManager.RestoreTable(ParticipantAnswer);
-                SetButtonActive(Save_btn);
+                SetButtonActive(TableSave_btn);
             }
             else
             {
-                SetButtonActive(TableSave_btn);
+                //Answer_TextBox.Text = ParticipantAnswer;
+                SetButtonActive(Save_btn);
             }
 
             _isUpdating = false;
