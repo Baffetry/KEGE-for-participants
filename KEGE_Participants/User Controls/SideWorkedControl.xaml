@@ -61,7 +61,7 @@
             </Button>
 
             <local:TimerControl
-                Margin="0 130 0 10"
+                Margin="0 150 0 10"
                 x:Name="_Timer" Grid.Row="1"
                 HorizontalAlignment="Center"
                 />

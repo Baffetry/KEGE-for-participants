@@ -2,7 +2,6 @@
 using KEGE_Participants.Models.Facade.Pages;
 using System.Windows;
 using System.Windows.Controls;
-using Testing_Option;
 
 namespace KEGE_Participants
 {
