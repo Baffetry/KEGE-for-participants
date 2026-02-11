@@ -35,6 +35,12 @@ namespace KEGE_Participants
             foreach (var panel in collection.Values)
             {
                 string taskNumber = panel.TaskId;
+                
+                if (taskNumber.Equals("26"))
+                {
+                    int x = 1;
+                }
+
                 string response = panel.GetAnswer();
 
                 Answers.Add(new Answer(taskNumber, response));

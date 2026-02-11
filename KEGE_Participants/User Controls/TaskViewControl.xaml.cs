@@ -126,6 +126,8 @@ namespace KEGE_Participants.User_Controls
 
             if (answers.Any())
             {
+                if (answers.All(r => r.Equals("%noAnswer%"))) return;
+
                 ParticipantAnswer = string.Join(" ", answers);
                 SetButtonActive(TableSave_btn);
                 AnswerSaved?.Invoke(TaskId);

@@ -15,10 +15,29 @@ namespace KEGE_Participants.Models.Table_manager
                 for (int col = 1; col <= 2; col++)
                 {
                     var tb = GetTextBoxAt(row, col);
-                    if (!string.IsNullOrWhiteSpace(tb?.Text))
-                        result.Add(tb.Text);
+
+                    string text = tb?.Text?.Trim();
+
+                    result.Add(string.IsNullOrEmpty(text) ? "%noAnswer%" : text);
                 }
             }
+
+            while (result.Count > 0)
+            {
+                int last = result.Count - 1;
+                int secondLast = result.Count - 2;
+
+                if (result[last].Equals("%noAnswer%") && result[secondLast].Equals("%noAnswer%"))
+                    result.RemoveRange(secondLast, 2);
+                else
+                    break;
+            }
+
+            if (result.Count == 0 /*|| result.All(r => r.Equals("%noAnswer%"))*/)
+            {
+                result.Clear();
+                result.Add("%noAnswer%");
+            }    
 
             return result;
         }
