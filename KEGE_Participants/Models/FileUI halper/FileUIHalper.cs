@@ -29,11 +29,26 @@ namespace KEGE_Participants.Models.FileUI_halper
 
             var panel = new StackPanel { Orientation = Orientation.Vertical };
 
+            // Гиперссылка
+            var run = new Run(file.FileName);
+            var hyperlink = new Hyperlink(run)
+            {
+                Tag = file,
+                Foreground = CustomBrusher.LightBlue,
+                TextDecorations = null
+            };
+            hyperlink.Click += onHyperlinkClick;
+            hyperlink.Cursor = Cursors.Hand;
+
             // Иконка
             var icon = (CustomImage)_imageFactory.FactoryMethod();
             icon.Source = new BitmapImage(new Uri(iconPath, UriKind.RelativeOrAbsolute));
             icon.HorizontalAlignment = HorizontalAlignment.Center;
             icon.VerticalAlignment = VerticalAlignment.Center;
+
+            icon.MouseLeftButtonUp += (s, e) => {
+                onHyperlinkClick(hyperlink, e);
+            };
 
             // Текст-ссылка
             var textBlock = (CustomTextBlock)_textBlockFactory.FactoryMethod();
@@ -44,16 +59,6 @@ namespace KEGE_Participants.Models.FileUI_halper
             textBlock.HorizontalAlignment = HorizontalAlignment.Center;
             textBlock.FontFamily = new FontFamily("/Resources/Fonts/#Inter");
 
-            // Гиперссылка
-            var run = new Run(file.FileName);
-            var hyperlink = new Hyperlink(run)
-            {
-                Tag = file,
-                Foreground = CustomBrusher.LightBlue,
-                TextDecorations = null
-            };
-            hyperlink.Click += onHyperlinkClick;
-            
             textBlock.Inlines.Add(hyperlink);
 
             panel.Children.Add(icon);

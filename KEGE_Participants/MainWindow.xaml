@@ -10,7 +10,7 @@
         ResizeMode="NoResize"
         WindowStyle="None"
         AllowsTransparency="True"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="KEGE Participants" Height="1080" Width="1920">
     <Window.Resources>
 
         <ControlTemplate x:Key="NoMouseOverButtonTemplate" TargetType="Button">
