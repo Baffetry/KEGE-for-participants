@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <AssemblyName>KEGE Participants</AssemblyName>
+    <ApplicationIcon>Resources\Icons\mainIcon32x32.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +24,10 @@
     <None Remove="Resources\Icons\settings96x96.png" />
     <None Remove="Resources\Icons\success96x96.png" />
     <None Remove="Resources\Icons\warning96x96.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Icons\mainIcon32x32.ico" />
   </ItemGroup>
 
   <ItemGroup>
