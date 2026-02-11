@@ -83,8 +83,12 @@
                     BorderBrush="#000" Background="#fff"/>
             </Grid>
 
-            <TextBlock Text="Длительность экзамена:" FontSize="26" Margin="5,10,0,15" FontFamily="/Resources/Fonts/#Inter" FontWeight="SemiBold"/>
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,50">
+            <TextBlock 
+                Visibility="Collapsed"
+                Text="Длительность экзамена:" FontSize="26" Margin="5,10,0,15" FontFamily="/Resources/Fonts/#Inter" FontWeight="SemiBold"/>
+            <StackPanel 
+                Visibility="Collapsed"
+                Orientation="Horizontal" Margin="0,0,0,50">
 
                 <StackPanel>
                     <TextBlock Text="Часы" FontSize="16" HorizontalAlignment="Center" FontFamily="/Resources/Fonts/#Inter" Foreground="Gray" Margin="0,0,0,8"/>

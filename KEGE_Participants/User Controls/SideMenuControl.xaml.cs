@@ -83,7 +83,7 @@ namespace KEGE_Participants.User_Controls
             {
                 NotificationWindow.QuickShow(
                     "Ошибка конфигурации.", 
-                    "Проверьте путь к файлу в настройках", 
+                    "Проверьте путь к варианту в настройках", 
                     NotificationType.Error
                     );
                 return;

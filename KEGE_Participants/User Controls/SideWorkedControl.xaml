@@ -46,7 +46,7 @@
             </Grid.RowDefinitions>
 
             <Button
-                x:Name="_Close_btn" Visibility="Visible"
+                x:Name="_Close_btn" Visibility="Collapsed"
                 Height="70" Width="70" Margin="20 30"
                 HorizontalAlignment="Left" BorderBrush="#000"
                 BorderThickness="3" Background="#fff"
