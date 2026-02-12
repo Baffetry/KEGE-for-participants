@@ -42,7 +42,7 @@
             BorderThickness="1"
             Background="#fff"
             CornerRadius="15"
-            Margin="30 10 0 10"
+            Margin="15 10 0 10"
             HorizontalAlignment="Left"
             >
             <StackPanel>
@@ -70,18 +70,18 @@
             </StackPanel>
         </Border>        
         
-        <Grid Grid.Row="1">
+        <Grid x:Name="TaskContainerGrid" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto" MinWidth="400"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Border 
+                x:Name="TaskImageBorder"
                 Grid.Column="0"
                 Background="#FFFFFF" 
                 CornerRadius="20" 
-                Margin="30 10 10 10"
-                MaxWidth="1100" 
+                Margin="15 10 15 10"
                 HorizontalAlignment="Left"
                 >
                 <Border.Effect>
@@ -114,6 +114,7 @@
                 CornerRadius="20" 
                 Margin="0 110 20 0"
                 Padding="30"
+                Width="370"
                 VerticalAlignment="Top"
                 >
 
@@ -157,7 +158,7 @@
                 Background="#FFFFFF" 
                 BorderBrush="#fff" BorderThickness="0,1,0,0" 
                 CornerRadius="15" HorizontalAlignment="Left"
-                Margin="30 0 0 20"
+                Margin="15 0 0 20"
                 Padding="40,20"
                 >
                 <Border.Effect>
@@ -221,7 +222,7 @@
                 Background="#FFFFFF" Visibility="Visible"
                 BorderBrush="#fff" BorderThickness="0,1,0,0" 
                 CornerRadius="15" HorizontalAlignment="Left"
-                Margin="30 0 0 20"
+                Margin="15 0 0 20"
                 Padding="40,20"
                 >
                 <Border.Effect>

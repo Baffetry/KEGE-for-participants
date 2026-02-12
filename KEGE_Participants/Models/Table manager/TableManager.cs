@@ -33,7 +33,7 @@ namespace KEGE_Participants.Models.Table_manager
                     break;
             }
 
-            if (result.Count == 0 /*|| result.All(r => r.Equals("%noAnswer%"))*/)
+            if (result.Count == 0)
             {
                 result.Clear();
                 result.Add("%noAnswer%");
@@ -55,7 +55,7 @@ namespace KEGE_Participants.Models.Table_manager
                     if (dataIndex >= data.Length) return;
 
                     var tb = GetTextBoxAt(row, col);
-                    if (tb is not null) tb?.Text = data[dataIndex++];
+                    if (tb is not null) tb.Text = data[dataIndex++];
                 }
             }
         }

@@ -145,6 +145,9 @@ namespace KEGE_Participants.User_Controls
             {
                 Table_Answer_Border.Visibility = Visibility.Visible;
                 Bottom_Answer_Border.Visibility = Visibility.Collapsed;
+
+                //TaskContainerGrid.ColumnDefinitions[1].MinWidth = 400;
+
                 GenerateTable(cfg.rowCount);
             }
             else
