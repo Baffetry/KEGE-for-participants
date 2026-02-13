@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using KEGE_Participants.Windows;
 
 namespace KEGE_Participants.User_Controls
 {
@@ -46,7 +47,15 @@ namespace KEGE_Participants.User_Controls
                 else
                 {
                     _timer.Stop();
-                    MessageBox.Show("Время вышло!");
+
+                    NotificationWindow.CloseAllNotificationWindows();
+                    NotificationWindow.QuickShow(
+                        string.Empty,
+                        "Время вышло!",
+                        NotificationType.Warning,
+                        ButtonsType.Ok
+                        );
+
                     TimeUp?.Invoke();
                 }
             };

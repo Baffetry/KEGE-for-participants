@@ -19,6 +19,13 @@ namespace KEGE_Participants.Windows
         Success
     }
 
+    public enum ButtonsType
+    {
+        None,
+        YesNo,
+        Ok
+    }
+
     public partial class NotificationWindow : Window
     {
         public MessageBoxResult result { get; set; }
@@ -34,13 +41,21 @@ namespace KEGE_Participants.Windows
             SetButtonBehavior();
         }
 
-        public static void QuickShow(string title, string text, NotificationType type, bool buttons = false)
+        public static void QuickShow(string title, string text, NotificationType type, ButtonsType buttonsType = ButtonsType.None)
         {
             var win = new NotificationWindow();
-            win.ShowNotification(title, text, type);
+            win.ShowNotification(title, text, type, buttonsType);
         }
 
-        public void ShowNotification(string messageTitle, string messageText, NotificationType type, bool buttons = false)
+        public static void CloseAllNotificationWindows()
+        {
+            var windowsToClose = Application.Current.Windows.OfType<NotificationWindow>().ToList();
+
+            foreach (var window in windowsToClose)
+                window.Close();
+        }
+
+        public void ShowNotification(string messageTitle, string messageText, NotificationType type, ButtonsType buttonsType)
         {
             switch (type)
             {
@@ -65,9 +80,24 @@ namespace KEGE_Participants.Windows
                     break;
             }
 
+            switch (buttonsType)
+            {
+                case ButtonsType.YesNo:
+                    _YesNoPanel.Visibility = Visibility.Visible;
+                    break;
+
+                case ButtonsType.Ok:
+                    _OkPanel.Visibility = Visibility.Visible;
+                    break;
+
+                case ButtonsType.None:
+                    _YesNoPanel.Visibility = Visibility.Collapsed;
+                    _OkPanel.Visibility = Visibility.Collapsed;
+                    break;
+            }
+
             MessageTitleText = messageTitle;
             MessageText = messageText;
-            _YesNoPanel.Visibility = buttons ? Visibility.Visible : Visibility.Collapsed;
 
             SetToXaml();
 
@@ -78,6 +108,7 @@ namespace KEGE_Participants.Windows
         {
             // Green
             ButtonBehavior.Apply(Yes_btn);
+            ButtonBehavior.Apply(Ok_btn);
 
             // Red
             ButtonBehavior.Apply(No_btn, true);
@@ -121,6 +152,11 @@ namespace KEGE_Participants.Windows
         private void Yes_btn_Click(object sender, RoutedEventArgs e)
         {
             result = MessageBoxResult.Yes;
+            this.Close();
+        }
+
+        private void Ok_btn_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
         }
     }

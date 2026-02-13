@@ -42,7 +42,7 @@ namespace KEGE_Participants.User_Controls
                     "Подтверждение.",
                     "Вы уверены, что хотите завершить попытку?",
                     NotificationType.Warning,
-                    true
+                    ButtonsType.YesNo
                     );
 
                 if (notification.result != MessageBoxResult.Yes) return false;

@@ -58,11 +58,14 @@ namespace KEGE_Participants.User_Controls
                 resultCollector.SecondName = SecondName;
                 resultCollector.MiddleName = MiddleName;
 
-                TestingOption option = null;
                 string cfgPath = App.GetResourceString("ConfigurationPath");
+                string dirPath = App.GetResourceString("SavedPath");
+
+                if (string.IsNullOrEmpty(dirPath)) throw new Exception();
+                if (string.IsNullOrEmpty(cfgPath)) throw new Exception();
 
                 var json = File.ReadAllText(cfgPath);
-                option = JsonSerializer.Deserialize<TestingOption>(json);
+                TestingOption option = JsonSerializer.Deserialize<TestingOption>(json);
 
                 resultCollector.OptionId = option.OptionID;
 
@@ -83,7 +86,7 @@ namespace KEGE_Participants.User_Controls
             {
                 NotificationWindow.QuickShow(
                     "Ошибка конфигурации.", 
-                    "Проверьте путь к варианту в настройках", 
+                    "Проверьте путь к варианту или к результату в настройках", 
                     NotificationType.Error
                     );
                 return;

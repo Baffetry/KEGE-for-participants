@@ -169,7 +169,7 @@
 
             <StackPanel 
                 x:Name="_YesNoPanel"
-                Visibility="Visible"
+                Visibility="Collapsed"
                 Grid.Row="3"
                 Orientation="Horizontal"
                 HorizontalAlignment="Right"
@@ -212,9 +212,35 @@
                         />
                 </Button>
 
-
             </StackPanel>
-            
+
+            <StackPanel 
+                x:Name="_OkPanel"
+                Visibility="Collapsed"
+                Grid.Row="3"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                >
+                <Button 
+                    x:Name="Ok_btn" 
+                    Width="80" 
+                    Height="60" 
+                    Margin="2 10 10 10" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Center"
+                    Click="Ok_btn_Click" 
+                    Template="{StaticResource NoMouseOverButtonTemplate}"
+                    >
+                    <TextBlock
+                        Text="Ок"
+                        FontSize="30"
+                        FontWeight="SemiBold"
+                        FontFamily="/Resources/Fonts/#Inter"
+                        />
+                </Button>
+            </StackPanel>
+
         </Grid>
     </Border>
     

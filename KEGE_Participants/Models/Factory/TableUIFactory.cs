@@ -24,7 +24,7 @@ namespace KEGE_Participants.Models.Factory
             if (col == 0)
             {
                 var textBlock = (CustomTextBlock)_textBlockFactory.FactoryMethod();
-                textBlock?.Text = (row + 1).ToString();
+                if (textBlock != null) textBlock.Text = (row + 1).ToString();
 
                 cellBorder.Background = CustomBrusher.LightGray;
                 cellBorder.Child = textBlock;
